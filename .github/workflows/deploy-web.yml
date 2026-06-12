@@ -1,0 +1,78 @@
+name: Deploy Web
+
+# 仅在 main 分支推送时触发，跳过纯文档变更
+on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'android/**'
+      - 'ios/**'
+  workflow_dispatch:
+    inputs:
+      use_wasm:
+        description: '启用 WebAssembly 渲染（需要浏览器支持 WasmGC）'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+env:
+  FLUTTER_VERSION: '3.35.0'
+
+jobs:
+  deploy:
+    name: 构建并部署到 Cloudflare Pages
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: 安装依赖
+        run: flutter pub get
+
+      - name: 生成国际化代码
+        run: flutter gen-l10n
+
+      # 从 GitHub Secrets 动态生成生产配置文件
+      # 需要在仓库 Settings → Secrets and variables → Actions 中配置：
+      #   CF_API_TOKEN      Cloudflare API Token（需要 Pages:Edit 权限）
+      #   CF_ACCOUNT_ID     Cloudflare Account ID
+      #   API_BASE_URL      后端 API 地址，如 https://api.example.com
+      #   WS_URL            WebSocket 地址，如 wss://api.example.com/ws
+      #   STATIC_URL        静态资源地址，如 https://static.example.com
+      - name: 生成生产环境配置
+        run: |
+          cat > config/prod.json << EOF
+          {
+            "APP_ENV": "production",
+            "API_BASE_URL": "${{ secrets.API_BASE_URL }}",
+            "WS_URL": "${{ secrets.WS_URL }}",
+            "STATIC_URL": "${{ secrets.STATIC_URL }}"
+          }
+          EOF
+
+      - name: 构建 Web
+        run: |
+          flutter build web --release \
+            --dart-define-from-file=config/prod.json \
+            --no-web-resources-cdn \
+            ${{ inputs.use_wasm == 'true' && '--wasm' || '' }}
+
+      - name: 部署到 Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          command: pages deploy build/web --project-name=flutter-boost --branch=main --commit-dirty=true

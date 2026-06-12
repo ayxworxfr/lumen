@@ -1,0 +1,6 @@
+{
+  "APP_ENV": "production",
+  "API_BASE_URL": "https://api.example.com",
+  "WS_URL": "wss://api.example.com/ws",
+  "STATIC_URL": "https://api.example.com/static"
+}

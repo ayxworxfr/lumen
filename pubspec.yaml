@@ -1,0 +1,59 @@
+name: lumen
+description: "Lumen — 基于 AVIF 的图片压缩与浏览工具"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # 状态管理 + 依赖注入
+  get: ^4.6.6
+
+  # 路由
+  go_router: ^14.8.1
+
+  # 网络请求
+  dio: ^5.4.0
+
+  # 本地存储
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  shared_preferences: ^2.2.2
+  flutter_secure_storage: ^9.2.2
+
+  # 数据模型
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.9.0
+
+  # UI 增强
+  cupertino_icons: ^1.0.8
+  cached_network_image: ^3.3.1
+  flutter_screenutil: ^5.9.0
+  shimmer: ^3.0.0
+
+  # 工具
+  logger: ^2.0.2
+  intl: ^0.20.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  build_runner: ^2.4.8
+  freezed: ^2.5.7
+  json_serializable: ^6.8.0
+  mocktail: ^1.0.4
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/images/
+    - assets/fonts/

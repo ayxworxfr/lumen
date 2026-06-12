@@ -1,0 +1,187 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [main, dev]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  FLUTTER_VERSION: '3.35.0'
+
+jobs:
+  # ── Android ────────────────────────────────────────────────
+  build-android:
+    name: Build Android APK / AAB
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: 设置 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: 安装依赖
+        run: flutter pub get
+
+      - name: 生成国际化代码
+        run: flutter gen-l10n
+
+      - name: 提取版本号
+        id: version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version: $VERSION"
+
+      - name: 构建 APK
+        run: flutter build apk --release --dart-define-from-file=config/ci.json
+
+      - name: 构建 AAB
+        run: flutter build appbundle --release --dart-define-from-file=config/ci.json
+
+      - name: 整理产物
+        run: |
+          APK_NAME="flutter-boost-v${{ steps.version.outputs.version }}-android.apk"
+          AAB_NAME="flutter-boost-v${{ steps.version.outputs.version }}-android.aab"
+          cp build/app/outputs/flutter-apk/app-release.apk "$APK_NAME"
+          cp build/app/outputs/bundle/release/app-release.aab "$AAB_NAME"
+          echo "APK_NAME=$APK_NAME" >> $GITHUB_ENV
+          echo "AAB_NAME=$AAB_NAME" >> $GITHUB_ENV
+
+      - name: 上传 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-boost-android-apk-v${{ steps.version.outputs.version }}
+          path: ${{ env.APK_NAME }}
+          retention-days: 3
+
+      - name: 上传 AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-boost-android-aab-v${{ steps.version.outputs.version }}
+          path: ${{ env.AAB_NAME }}
+          retention-days: 3
+
+  # ── Web ────────────────────────────────────────────────────
+  build-web:
+    name: Build Web
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: 'stable'
+          cache: true
+
+      - name: 安装依赖
+        run: flutter pub get
+
+      - name: 生成国际化代码
+        run: flutter gen-l10n
+
+      - name: 提取版本号
+        id: version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: 构建 Web
+        run: |
+          flutter build web --release \
+            --dart-define-from-file=config/ci.json \
+            --no-web-resources-cdn
+
+      - name: 上传 Web 产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-boost-web-v${{ steps.version.outputs.version }}
+          path: build/web
+          retention-days: 3
+
+  # ── Release ────────────────────────────────────────────────
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build-android, build-web]
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 提取版本号
+        id: version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | sed 's/version: //' | sed 's/+.*//')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: 下载 Android APK
+        uses: actions/download-artifact@v4
+        with:
+          name: flutter-boost-android-apk-v${{ steps.version.outputs.version }}
+          path: ./artifacts/android
+
+      - name: 下载 Android AAB
+        uses: actions/download-artifact@v4
+        with:
+          name: flutter-boost-android-aab-v${{ steps.version.outputs.version }}
+          path: ./artifacts/android
+
+      - name: 创建 Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./artifacts/android/*.apk
+            ./artifacts/android/*.aab
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── iOS（暂未配置签名证书，需要时解注释并配置 Secrets）────────
+  # build-ios:
+  #   name: Build iOS IPA
+  #   runs-on: macos-latest
+  #   needs: []
+  #   continue-on-error: true
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: subosito/flutter-action@v2
+  #       with:
+  #         flutter-version: ${{ env.FLUTTER_VERSION }}
+  #         channel: 'stable'
+  #         cache: true
+  #     - run: flutter pub get
+  #     - run: flutter gen-l10n
+  #     - run: flutter build ipa --release --dart-define-from-file=config/ci.json
+  #       env:
+  #         CODE_SIGN_IDENTITY: ''
+  #         CODE_SIGNING_REQUIRED: 'NO'
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: flutter-boost-ios-ipa
+  #         path: build/ios/ipa/*.ipa
+  #         retention-days: 3
