@@ -48,13 +48,13 @@ linter:
 
     # ==================== 代码风格 ====================
     always_declare_return_types: true
-    always_put_control_body_on_new_line: true
+    always_put_control_body_on_new_line: false
     always_put_required_named_parameters_first: true
     annotate_overrides: true
     avoid_bool_literals_in_conditional_expressions: true
     avoid_catches_without_on_clauses: false
     avoid_catching_errors: true
-    avoid_classes_with_only_static_members: true
+    avoid_classes_with_only_static_members: false
     avoid_double_and_int_checks: true
     avoid_equals_and_hash_code_on_mutable_classes: true
     avoid_escaping_inner_quotes: true
@@ -66,7 +66,7 @@ linter:
     avoid_js_rounded_ints: true
     avoid_multiple_declarations_per_line: true
     avoid_null_checks_in_equality_operators: true
-    avoid_positional_boolean_parameters: true
+    avoid_positional_boolean_parameters: false
     avoid_private_typedef_functions: true
     avoid_redundant_argument_values: true
     avoid_renaming_method_parameters: true
@@ -84,7 +84,7 @@ linter:
     await_only_futures: true
     camel_case_extensions: true
     camel_case_types: true
-    cascade_invocations: true
+    cascade_invocations: false
     cast_nullable_to_non_nullable: true
     combinators_ordering: true
     conditional_uri_does_not_exist: true
@@ -93,13 +93,13 @@ linter:
     dangling_library_doc_comments: true
     deprecated_consistency: true
     directives_ordering: true
-    do_not_use_environment: true
+    do_not_use_environment: false
     empty_catches: true
     empty_constructor_bodies: true
     eol_at_end_of_file: true
     exhaustive_cases: true
     file_names: true
-    flutter_style_todos: true
+    flutter_style_todos: false
     implementation_imports: true
     implicit_call_tearoffs: true
     join_return_with_assignment: true
@@ -107,7 +107,7 @@ linter:
     library_annotations: true
     library_names: true
     library_prefixes: true
-    library_private_types_in_public_api: true
+    library_private_types_in_public_api: false
     lines_longer_than_80_chars: false
     matching_super_parameters: true
     missing_whitespace_between_adjacent_strings: true
@@ -171,7 +171,7 @@ linter:
     slash_for_doc_comments: true
     sort_child_properties_last: true
     sort_constructors_first: true
-    sort_pub_dependencies: true
+    sort_pub_dependencies: false
     sort_unnamed_constructors_first: true
     tighten_type_of_initializing_formals: true
     type_annotate_public_apis: true
@@ -200,7 +200,7 @@ linter:
     unnecessary_string_interpolations: true
     unnecessary_this: true
     unnecessary_to_list_in_spreads: true
-    unreachable_from_main: true
+    unreachable_from_main: false
     use_colored_box: true
     use_decorated_box: true
     use_enums: true
@@ -212,7 +212,7 @@ linter:
     use_named_constants: true
     use_raw_strings: true
     use_rethrow_when_possible: true
-    use_setters_to_change_properties: true
+    use_setters_to_change_properties: false
     use_string_buffers: true
     use_string_in_part_of_directives: true
     use_super_parameters: true

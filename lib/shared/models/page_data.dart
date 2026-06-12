@@ -1,20 +1,5 @@
 /// 分页数据模型
 class PageData<T> {
-  /// 当前页码
-  final int page;
-
-  /// 每页数量
-  final int pageSize;
-
-  /// 总数量
-  final int total;
-
-  /// 总页数
-  final int totalPages;
-
-  /// 数据列表
-  final List<T> list;
-
   const PageData({
     required this.page,
     required this.pageSize,
@@ -22,21 +7,6 @@ class PageData<T> {
     required this.totalPages,
     required this.list,
   });
-
-  /// 是否有下一页
-  bool get hasMore => page < totalPages;
-
-  /// 是否是第一页
-  bool get isFirstPage => page == 1;
-
-  /// 是否是最后一页
-  bool get isLastPage => page >= totalPages;
-
-  /// 是否为空
-  bool get isEmpty => list.isEmpty;
-
-  /// 是否不为空
-  bool get isNotEmpty => list.isNotEmpty;
 
   /// 从 JSON 解析
   factory PageData.fromJson(
@@ -53,17 +23,6 @@ class PageData<T> {
     );
   }
 
-  /// 转换为 JSON
-  Map<String, dynamic> toJson(Map<String, dynamic> Function(T) toJsonT) {
-    return {
-      'page': page,
-      'pageSize': pageSize,
-      'total': total,
-      'totalPages': totalPages,
-      'list': list.map(toJsonT).toList(),
-    };
-  }
-
   /// 创建空的分页数据
   factory PageData.empty() {
     return const PageData(
@@ -73,6 +32,47 @@ class PageData<T> {
       totalPages: 0,
       list: [],
     );
+  }
+
+  /// 当前页码
+  final int page;
+
+  /// 每页数量
+  final int pageSize;
+
+  /// 总数量
+  final int total;
+
+  /// 总页数
+  final int totalPages;
+
+  /// 数据列表
+  final List<T> list;
+
+  /// 是否有下一页
+  bool get hasMore => page < totalPages;
+
+  /// 是否是第一页
+  bool get isFirstPage => page == 1;
+
+  /// 是否是最后一页
+  bool get isLastPage => page >= totalPages;
+
+  /// 是否为空
+  bool get isEmpty => list.isEmpty;
+
+  /// 是否不为空
+  bool get isNotEmpty => list.isNotEmpty;
+
+  /// 转换为 JSON
+  Map<String, dynamic> toJson(Map<String, dynamic> Function(T) toJsonT) {
+    return {
+      'page': page,
+      'pageSize': pageSize,
+      'total': total,
+      'totalPages': totalPages,
+      'list': list.map(toJsonT).toList(),
+    };
   }
 
   /// 复制并替换部分属性

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../core/theme/app_theme.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'controllers/app_controller.dart';
 import 'router/app_router.dart';
-import '../core/theme/app_theme.dart';
 
 /// 应用根组件
 class App extends StatelessWidget {

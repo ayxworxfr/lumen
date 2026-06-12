@@ -43,14 +43,14 @@ class ErrorInterceptor extends Interceptor {
 
       case DioExceptionType.unknown:
         if (err.error != null && err.error is ApiException) {
-          return err.error as ApiException;
+          return err.error! as ApiException;
         }
         return ApiException.unknown(err.message, err.error);
     }
   }
 
   /// 处理响应错误
-  ApiException _handleResponseError(Response? response) {
+  ApiException _handleResponseError(Response<dynamic>? response) {
     if (response == null) {
       return ApiException.unknown();
     }

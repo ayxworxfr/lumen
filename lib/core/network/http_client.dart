@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:get/get.dart' hide Response, FormData, MultipartFile;
+import 'package:get/get.dart' hide FormData, MultipartFile, Response;
 
 import '../../shared/constants/api_constants.dart';
 import 'api_exception.dart';
@@ -149,7 +149,7 @@ class HttpClient extends GetxService {
   }
 
   /// 下载文件
-  Future<Response> download(
+  Future<Response<dynamic>> download(
     String url,
     String savePath, {
     void Function(int, int)? onReceiveProgress,
@@ -170,7 +170,7 @@ class HttpClient extends GetxService {
   /// 从 DioException 中提取自定义异常
   ApiException _extractException(DioException e) {
     if (e.error is ApiException) {
-      return e.error as ApiException;
+      return e.error! as ApiException;
     }
     return ApiException.unknown(e.message, e);
   }

@@ -4,6 +4,14 @@ import '../theme/app_colors.dart';
 
 /// 加载中组件
 class AppLoading extends StatelessWidget {
+  const AppLoading({
+    super.key,
+    this.message,
+    this.color,
+    this.size = 36,
+    this.showOverlay = false,
+  });
+
   /// 加载提示文字
   final String? message;
 
@@ -16,17 +24,9 @@ class AppLoading extends StatelessWidget {
   /// 是否显示背景遮罩
   final bool showOverlay;
 
-  const AppLoading({
-    super.key,
-    this.message,
-    this.color,
-    this.size = 36,
-    this.showOverlay = false,
-  });
-
   @override
   Widget build(BuildContext context) {
-    Widget loading = Column(
+    final Widget loading = Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -54,7 +54,7 @@ class AppLoading extends StatelessWidget {
     );
 
     if (showOverlay) {
-      return Container(
+      return ColoredBox(
         color: Colors.black.withValues(alpha: 0.3),
         child: Center(
           child: Card(
@@ -80,6 +80,13 @@ class AppLoading extends StatelessWidget {
 
 /// 骨架屏加载组件（带流光扫描动画）
 class AppShimmerLoading extends StatefulWidget {
+  const AppShimmerLoading({
+    required this.child,
+    super.key,
+    this.baseColor,
+    this.highlightColor,
+  });
+
   /// 子组件
   final Widget child;
 
@@ -88,13 +95,6 @@ class AppShimmerLoading extends StatefulWidget {
 
   /// 高亮颜色
   final Color? highlightColor;
-
-  const AppShimmerLoading({
-    super.key,
-    required this.child,
-    this.baseColor,
-    this.highlightColor,
-  });
 
   @override
   State<AppShimmerLoading> createState() => _AppShimmerLoadingState();
@@ -140,10 +140,9 @@ class _AppShimmerLoadingState extends State<AppShimmerLoading>
               stops: const [0.0, 0.5, 1.0],
               begin: Alignment(-2.0 + t * 4, -0.3),
               end: Alignment(-1.0 + t * 4, 0.3),
-              tileMode: TileMode.clamp,
             ).createShader(bounds);
           },
-          child: child!,
+          child: child,
         );
       },
       child: widget.child,
@@ -153,6 +152,14 @@ class _AppShimmerLoadingState extends State<AppShimmerLoading>
 
 /// 列表骨架屏
 class AppListSkeleton extends StatelessWidget {
+  const AppListSkeleton({
+    super.key,
+    this.itemCount = 5,
+    this.itemHeight = 72,
+    this.showAvatar = true,
+    this.showSubtitle = true,
+  });
+
   /// 项目数量
   final int itemCount;
 
@@ -164,14 +171,6 @@ class AppListSkeleton extends StatelessWidget {
 
   /// 是否显示副标题
   final bool showSubtitle;
-
-  const AppListSkeleton({
-    super.key,
-    this.itemCount = 5,
-    this.itemHeight = 72,
-    this.showAvatar = true,
-    this.showSubtitle = true,
-  });
 
   @override
   Widget build(BuildContext context) {

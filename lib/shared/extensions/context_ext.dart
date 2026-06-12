@@ -73,7 +73,7 @@ extension ContextExt on BuildContext {
   // ==================== 对话框 ====================
   /// 显示加载对话框
   void showLoadingDialog({String? message}) {
-    showDialog(
+    showDialog<void>(
       context: this,
       barrierDismissible: false,
       builder: (context) => PopScope(
@@ -101,7 +101,9 @@ extension ContextExt on BuildContext {
 
   /// 隐藏加载对话框
   void hideLoadingDialog() {
-    if (canPop) pop();
+    if (canPop) {
+      pop<void>();
+    }
   }
 
   /// 显示确认对话框

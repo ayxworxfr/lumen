@@ -74,7 +74,7 @@ class ValidatorUtil {
   /// 验证密码强度（至少 8 位，包含字母和数字）
   static bool isStrongPassword(String? value) {
     if (value == null || value.length < 8) return false;
-    return RegExp(r'[a-zA-Z]').hasMatch(value) && RegExp(r'\d').hasMatch(value);
+    return RegExp('[a-zA-Z]').hasMatch(value) && RegExp(r'\d').hasMatch(value);
   }
 
   static bool isEmpty(String? value) => value == null || value.trim().isEmpty;

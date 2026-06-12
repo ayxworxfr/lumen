@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/storage/storage_service.dart';
-import '../../shared/constants/storage_keys.dart';
 import '../../features/auth/bindings/auth_binding.dart';
 import '../../features/auth/views/login_page.dart';
 import '../../features/auth/views/register_page.dart';
 import '../../features/home/bindings/home_binding.dart';
 import '../../features/home/views/home_page.dart';
 import '../../features/splash/views/splash_page.dart';
+import '../../shared/constants/storage_keys.dart';
 
 /// 路由路径常量
 abstract class AppRoutes {
@@ -48,8 +48,8 @@ class AppRouter {
         path: AppRoutes.register,
         pageBuilder: (_, __) {
           AuthBinding().dependencies();
-          return CustomTransitionPage(
-            child: const RegisterPage(),
+          return const CustomTransitionPage(
+            child: RegisterPage(),
             transitionsBuilder: _slideFromRight,
           );
         },

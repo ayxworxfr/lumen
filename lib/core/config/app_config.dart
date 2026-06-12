@@ -26,19 +26,19 @@ class AppConfig {
   static const double designHeight = 852;
 
   /// 默认圆角
-  static const double defaultRadius = 8.0;
+  static const double defaultRadius = 8;
 
   /// 大圆角
-  static const double largeRadius = 16.0;
+  static const double largeRadius = 16;
 
   /// 默认内边距
-  static const double defaultPadding = 16.0;
+  static const double defaultPadding = 16;
 
   /// 小内边距
-  static const double smallPadding = 8.0;
+  static const double smallPadding = 8;
 
   /// 大内边距
-  static const double largePadding = 24.0;
+  static const double largePadding = 24;
 
   // ==================== 动画配置 ====================
 
@@ -60,7 +60,7 @@ class AppConfig {
   static const int defaultPageSize = 20;
 
   /// 加载更多阈值（距离底部像素）
-  static const double loadMoreThreshold = 100.0;
+  static const double loadMoreThreshold = 100;
 
   // ==================== 缓存配置 ====================
 

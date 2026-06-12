@@ -3,17 +3,7 @@ library;
 
 /// API 响应基础类型
 class ApiResponse<T> {
-  final int code;
-  final String message;
-  final T? data;
-
   const ApiResponse({required this.code, required this.message, this.data});
-
-  /// 是否成功
-  bool get isSuccess => code == 0;
-
-  /// 是否失败
-  bool get isError => code != 0;
 
   factory ApiResponse.fromJson(
     Map<String, dynamic> json,
@@ -27,6 +17,15 @@ class ApiResponse<T> {
           : json['data'] as T?,
     );
   }
+  final int code;
+  final String message;
+  final T? data;
+
+  /// 是否成功
+  bool get isSuccess => code == 0;
+
+  /// 是否失败
+  bool get isError => code != 0;
 
   Map<String, dynamic> toJson(Object? Function(T?)? toJsonT) {
     return {
@@ -39,15 +38,22 @@ class ApiResponse<T> {
 
 /// 分页信息
 class Pagination {
-  final int current;
-  final int pageSize;
-  final int total;
-
   const Pagination({
     required this.current,
     required this.pageSize,
     required this.total,
   });
+
+  factory Pagination.fromJson(Map<String, dynamic> json) {
+    return Pagination(
+      current: json['current'] as int? ?? 1,
+      pageSize: json['pageSize'] as int? ?? 20,
+      total: json['total'] as int? ?? 0,
+    );
+  }
+  final int current;
+  final int pageSize;
+  final int total;
 
   /// 总页数
   int get totalPages => (total / pageSize).ceil();
@@ -58,14 +64,6 @@ class Pagination {
   /// 是否有上一页
   bool get hasPrevPage => current > 1;
 
-  factory Pagination.fromJson(Map<String, dynamic> json) {
-    return Pagination(
-      current: json['current'] as int? ?? 1,
-      pageSize: json['pageSize'] as int? ?? 20,
-      total: json['total'] as int? ?? 0,
-    );
-  }
-
   Map<String, dynamic> toJson() {
     return {'current': current, 'pageSize': pageSize, 'total': total};
   }
@@ -73,9 +71,6 @@ class Pagination {
 
 /// 分页响应
 class PaginatedResponse<T> {
-  final List<T> list;
-  final Pagination pagination;
-
   const PaginatedResponse({required this.list, required this.pagination});
 
   factory PaginatedResponse.fromJson(
@@ -93,14 +88,15 @@ class PaginatedResponse<T> {
       ),
     );
   }
+  final List<T> list;
+  final Pagination pagination;
 }
 
 /// 请求参数：分页
 class PaginationParams {
+  const PaginationParams({this.page = 1, this.pageSize = 20});
   final int page;
   final int pageSize;
-
-  const PaginationParams({this.page = 1, this.pageSize = 20});
 
   Map<String, dynamic> toJson() {
     return {'page': page, 'pageSize': pageSize};
@@ -109,10 +105,11 @@ class PaginationParams {
 
 /// 请求参数：排序
 class SortParams {
-  final String field;
-  final String order; // 'asc' | 'desc'
+  // 'asc' | 'desc'
 
   const SortParams({required this.field, this.order = 'asc'});
+  final String field;
+  final String order;
 
   Map<String, dynamic> toJson() {
     return {'sortField': field, 'sortOrder': order};

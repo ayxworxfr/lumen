@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/generated/app_localizations.dart';
 import '../l10n/l10n_extension.dart';
 import '../theme/app_colors.dart';
-import '../../l10n/generated/app_localizations.dart';
 
 enum _ErrorType {
   generic,
@@ -22,28 +22,6 @@ enum _ErrorType {
 /// AppError.network(context, onRetry: controller.reload)
 /// ```
 class AppError extends StatelessWidget {
-  final _ErrorType _type;
-
-  /// 自定义图标（工厂构造函数已预设，也可手动传入覆盖）
-  final IconData? icon;
-
-  /// 自定义图片 Widget
-  final Widget? image;
-
-  /// 覆盖默认标题
-  final String? title;
-
-  /// 覆盖默认描述
-  final String? message;
-
-  /// 覆盖重试按钮文字
-  final String? retryText;
-
-  final VoidCallback? onRetry;
-
-  final double iconSize;
-  final Color? iconColor;
-
   const AppError({
     super.key,
     this.icon,
@@ -57,17 +35,17 @@ class AppError extends StatelessWidget {
   }) : _type = _ErrorType.generic;
 
   const AppError._typed({
-    super.key,
     required _ErrorType type,
+    super.key,
     this.icon,
-    this.image,
-    this.title,
     this.message,
-    this.retryText,
     this.onRetry,
-    this.iconSize = 80,
-    this.iconColor,
-  }) : _type = type;
+  }) : _type = type,
+       image = null,
+       title = null,
+       retryText = null,
+       iconSize = 80,
+       iconColor = null;
 
   factory AppError.network({Key? key, VoidCallback? onRetry}) =>
       AppError._typed(
@@ -128,6 +106,27 @@ class AppError extends StatelessWidget {
         icon: Icons.timer_off_outlined,
         onRetry: onRetry,
       );
+  final _ErrorType _type;
+
+  /// 自定义图标（工厂构造函数已预设，也可手动传入覆盖）
+  final IconData? icon;
+
+  /// 自定义图片 Widget
+  final Widget? image;
+
+  /// 覆盖默认标题
+  final String? title;
+
+  /// 覆盖默认描述
+  final String? message;
+
+  /// 覆盖重试按钮文字
+  final String? retryText;
+
+  final VoidCallback? onRetry;
+
+  final double iconSize;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context) {

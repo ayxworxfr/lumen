@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/l10n_extension.dart';
-import 'app_loading.dart';
 import 'app_empty.dart';
 import 'app_error.dart';
+import 'app_loading.dart';
 
 /// 列表状态
 enum ListState {
@@ -27,6 +27,27 @@ enum ListState {
 ///
 /// 支持下拉刷新、上拉加载更多、状态管理
 class AppRefreshList<T> extends StatelessWidget {
+  const AppRefreshList({
+    required this.items,
+    required this.itemBuilder,
+    super.key,
+    this.state = ListState.success,
+    this.hasMore = false,
+    this.isLoadingMore = false,
+    this.onRefresh,
+    this.onLoadMore,
+    this.onRetry,
+    this.separatorBuilder,
+    this.emptyWidget,
+    this.errorMessage,
+    this.padding,
+    this.physics,
+    this.controller,
+    this.header,
+    this.footer,
+    this.loadMoreThreshold = 100,
+  });
+
   /// 数据列表
   final List<T> items;
 
@@ -78,27 +99,6 @@ class AppRefreshList<T> extends StatelessWidget {
   /// 加载更多触发阈值（距离底部的像素）
   final double loadMoreThreshold;
 
-  const AppRefreshList({
-    super.key,
-    required this.items,
-    required this.itemBuilder,
-    this.state = ListState.success,
-    this.hasMore = false,
-    this.isLoadingMore = false,
-    this.onRefresh,
-    this.onLoadMore,
-    this.onRetry,
-    this.separatorBuilder,
-    this.emptyWidget,
-    this.errorMessage,
-    this.padding,
-    this.physics,
-    this.controller,
-    this.header,
-    this.footer,
-    this.loadMoreThreshold = 100,
-  });
-
   @override
   Widget build(BuildContext context) {
     // 初始加载中
@@ -118,7 +118,7 @@ class AppRefreshList<T> extends StatelessWidget {
     }
 
     // 列表
-    Widget list = NotificationListener<ScrollNotification>(
+    final Widget list = NotificationListener<ScrollNotification>(
       onNotification: (notification) {
         if (notification is ScrollEndNotification) {
           _checkLoadMore(notification);

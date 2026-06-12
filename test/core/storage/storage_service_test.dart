@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:lumen/core/storage/hive_boxes.dart';
 import 'package:lumen/shared/constants/storage_keys.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +17,10 @@ void main() {
 
     test('write and read string roundtrip', () async {
       const storage = FlutterSecureStorage();
-      await storage.write(key: StorageKeys.accessToken, value: 'test_access_token');
+      await storage.write(
+        key: StorageKeys.accessToken,
+        value: 'test_access_token',
+      );
       final result = await storage.read(key: StorageKeys.accessToken);
       expect(result, equals('test_access_token'));
     });
@@ -133,7 +135,10 @@ void main() {
 
     test('HiveBox enum has exactly user/cache/settings values', () {
       expect(HiveBox.values.length, equals(3));
-      expect(HiveBox.values, containsAll([HiveBox.user, HiveBox.cache, HiveBox.settings]));
+      expect(
+        HiveBox.values,
+        containsAll([HiveBox.user, HiveBox.cache, HiveBox.settings]),
+      );
     });
 
     test('save to user box and retrieve from user box', () async {

@@ -1,18 +1,6 @@
 /// API 异常定义
 class ApiException implements Exception {
-  /// 错误码
-  final int? code;
-
-  /// 错误消息
-  final String message;
-
-  /// 原始错误
-  final dynamic originalError;
-
-  ApiException({this.code, required this.message, this.originalError});
-
-  @override
-  String toString() => 'ApiException(code: $code, message: $message)';
+  ApiException({required this.message, this.code, this.originalError});
 
   /// 网络连接错误
   factory ApiException.network([String? message]) =>
@@ -49,4 +37,16 @@ class ApiException implements Exception {
         message: message ?? '未知错误',
         originalError: error,
       );
+
+  /// 错误码
+  final int? code;
+
+  /// 错误消息
+  final String message;
+
+  /// 原始错误
+  final dynamic originalError;
+
+  @override
+  String toString() => 'ApiException(code: $code, message: $message)';
 }

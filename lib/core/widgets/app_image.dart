@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../theme/app_colors.dart';
@@ -8,6 +8,19 @@ import '../theme/app_colors.dart';
 ///
 /// 支持网络图片加载、缓存、占位图、错误处理
 class AppImage extends StatelessWidget {
+  const AppImage({
+    super.key,
+    this.url,
+    this.width,
+    this.height,
+    this.fit = BoxFit.cover,
+    this.borderRadius = 0,
+    this.isCircle = false,
+    this.placeholder,
+    this.errorWidget,
+    this.defaultAsset,
+  });
+
   /// 图片地址
   final String? url;
 
@@ -34,19 +47,6 @@ class AppImage extends StatelessWidget {
 
   /// 默认图片路径（本地资源）
   final String? defaultAsset;
-
-  const AppImage({
-    super.key,
-    this.url,
-    this.width,
-    this.height,
-    this.fit = BoxFit.cover,
-    this.borderRadius = 0,
-    this.isCircle = false,
-    this.placeholder,
-    this.errorWidget,
-    this.defaultAsset,
-  });
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +152,15 @@ class AppImage extends StatelessWidget {
 
 /// 圆形头像组件
 class AppAvatar extends StatelessWidget {
+  const AppAvatar({
+    super.key,
+    this.url,
+    this.size = 40,
+    this.defaultAsset,
+    this.showOnlineStatus = false,
+    this.isOnline = false,
+  });
+
   /// 头像地址
   final String? url;
 
@@ -166,15 +175,6 @@ class AppAvatar extends StatelessWidget {
 
   /// 是否在线
   final bool isOnline;
-
-  const AppAvatar({
-    super.key,
-    this.url,
-    this.size = 40,
-    this.defaultAsset,
-    this.showOnlineStatus = false,
-    this.isOnline = false,
-  });
 
   @override
   Widget build(BuildContext context) {

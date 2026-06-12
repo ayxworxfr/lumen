@@ -6,14 +6,13 @@ part 'api_response.g.dart';
 /// API 统一响应模型
 @Freezed(genericArgumentFactories: true)
 class ApiResponse<T> with _$ApiResponse<T> {
-  const ApiResponse._();
-
   const factory ApiResponse({
     required int code,
     required String message,
     T? data,
     int? timestamp,
   }) = _ApiResponse<T>;
+  const ApiResponse._();
 
   factory ApiResponse.fromJson(
     Map<String, dynamic> json,

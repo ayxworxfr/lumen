@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/generated/app_localizations.dart';
 import '../l10n/l10n_extension.dart';
 import '../theme/app_colors.dart';
-import '../../l10n/generated/app_localizations.dart';
 
 enum _EmptyType {
   generic,
@@ -22,19 +22,6 @@ enum _EmptyType {
 /// AppEmpty.noSearchResult(keyword: query, onClear: controller.clearSearch)
 /// ```
 class AppEmpty extends StatelessWidget {
-  final _EmptyType _type;
-  final IconData? icon;
-  final Widget? image;
-  final String? title;
-  final String? description;
-  final String? actionText;
-  final VoidCallback? onAction;
-  final double iconSize;
-  final Color? iconColor;
-
-  /// 用于 noSearchResult 的关键字
-  final String? _keyword;
-
   const AppEmpty({
     super.key,
     this.icon,
@@ -49,18 +36,18 @@ class AppEmpty extends StatelessWidget {
        _keyword = null;
 
   const AppEmpty._typed({
-    super.key,
     required _EmptyType type,
+    super.key,
     this.icon,
-    this.image,
-    this.title,
     this.description,
     this.actionText,
     this.onAction,
-    this.iconSize = 80,
-    this.iconColor,
     String? keyword,
   }) : _type = type,
+       image = null,
+       title = null,
+       iconSize = 80,
+       iconColor = null,
        _keyword = keyword;
 
   factory AppEmpty.noData({
@@ -116,6 +103,18 @@ class AppEmpty extends StatelessWidget {
         icon: Icons.favorite_border,
         onAction: onExplore,
       );
+  final _EmptyType _type;
+  final IconData? icon;
+  final Widget? image;
+  final String? title;
+  final String? description;
+  final String? actionText;
+  final VoidCallback? onAction;
+  final double iconSize;
+  final Color? iconColor;
+
+  /// 用于 noSearchResult 的关键字
+  final String? _keyword;
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +189,7 @@ class AppEmpty extends StatelessWidget {
     return switch (_type) {
       _EmptyType.noSearchResult =>
         _keyword != null
-            ? l10n.widgetsEmptyNoSearchMessage(_keyword!)
+            ? l10n.widgetsEmptyNoSearchMessage(_keyword)
             : l10n.widgetsEmptyNoSearchMessageDefault,
       _EmptyType.noNetwork => l10n.widgetsEmptyNoNetworkMessage,
       _EmptyType.noMessage => l10n.widgetsEmptyNoMessageMessage,

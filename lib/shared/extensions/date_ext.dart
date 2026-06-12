@@ -113,7 +113,7 @@ extension DateExt on DateTime {
   DateTime get endOfWeek => add(Duration(days: 7 - weekday)).endOfDay;
 
   /// 一月的开始
-  DateTime get startOfMonth => DateTime(year, month, 1);
+  DateTime get startOfMonth => DateTime(year, month);
 
   /// 一月的结束
   DateTime get endOfMonth => DateTime(year, month + 1, 0, 23, 59, 59, 999);

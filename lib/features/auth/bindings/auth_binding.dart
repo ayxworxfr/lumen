@@ -10,7 +10,7 @@ class AuthBinding extends Bindings {
   void dependencies() {
     // 注入认证控制器（守卫避免重复注册）
     if (!Get.isRegistered<AuthController>()) {
-      Get.lazyPut<AuthController>(() => AuthController());
+      Get.lazyPut<AuthController>(AuthController.new);
     }
   }
 }

@@ -27,7 +27,10 @@ class AppLogInterceptor extends Interceptor {
   }
 
   @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
     LoggerUtil.d('┌─────────────────── Response ──────────────────');
     LoggerUtil.d('│ ${response.statusCode} ${response.requestOptions.uri}');
     LoggerUtil.d('│ Data: ${response.data}');

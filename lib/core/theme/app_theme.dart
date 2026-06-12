@@ -14,13 +14,9 @@ class AppTheme {
       // 颜色方案
       colorScheme: const ColorScheme.light(
         primary: AppColors.primary,
-        onPrimary: Colors.white,
         primaryContainer: AppColors.primaryLight,
-        secondary: AppColors.secondary,
         onSecondary: Colors.white,
         error: AppColors.error,
-        onError: Colors.white,
-        surface: AppColors.surface,
         onSurface: AppColors.textPrimary,
       ),
 
@@ -161,12 +157,10 @@ class AppTheme {
         primary: AppColors.primary,
         onPrimary: Colors.white,
         primaryContainer: AppColors.primaryDark,
-        secondary: AppColors.secondary,
         onSecondary: Colors.white,
         error: AppColors.error,
         onError: Colors.white,
         surface: AppColors.surfaceDark,
-        onSurface: AppColors.textPrimaryDark,
       ),
 
       // Scaffold 背景色

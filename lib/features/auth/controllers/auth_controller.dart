@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 
 import '../../../app/router/app_router.dart';
 import '../../../core/utils/logger_util.dart';
-import '../services/auth_service.dart';
 import '../models/user_model.dart';
+import '../services/auth_service.dart';
 
 /// 认证控制器
 class AuthController extends GetxController {

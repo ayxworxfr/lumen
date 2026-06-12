@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lumen/l10n/generated/app_localizations.dart';
 import 'package:intl/intl.dart';
+import 'package:lumen/l10n/generated/app_localizations.dart';
 
 /// 字符串扩展
 extension FlutterBoostStringExtension on String {

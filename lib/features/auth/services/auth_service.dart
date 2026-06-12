@@ -50,7 +50,7 @@ class AuthService extends GetxService {
 
     final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
       response.data!,
-      (e) => e as Map<String, dynamic>,
+      (e) => e! as Map<String, dynamic>,
     );
     final data = apiResponse.data!;
 
@@ -142,7 +142,7 @@ class AuthService extends GetxService {
 
     final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
       response.data!,
-      (e) => e as Map<String, dynamic>,
+      (e) => e! as Map<String, dynamic>,
     );
     final data = apiResponse.data!;
 
@@ -200,7 +200,7 @@ class AuthService extends GetxService {
         data: {'refreshToken': storedRefreshToken},
       );
 
-      final data = response.data as Map<String, dynamic>;
+      final data = response.data!;
       await _saveTokens(data);
       return true;
     } catch (e) {
@@ -247,9 +247,7 @@ class AuthService extends GetxService {
       data: data,
     );
 
-    currentUser.value = UserModel.fromJson(
-      response.data as Map<String, dynamic>,
-    );
+    currentUser.value = UserModel.fromJson(response.data!);
     await _storage.saveUserData(
       StorageKeys.currentUser,
       currentUser.value!.toJson(),

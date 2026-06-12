@@ -17,7 +17,7 @@ class RegisterPage extends GetView<AuthController> {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     return Scaffold(
-      body: Container(
+      body: DecoratedBox(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,

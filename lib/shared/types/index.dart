@@ -4,5 +4,5 @@
 /// 集中管理所有类型定义
 library;
 
-export 'common_types.dart';
 export 'api_types.dart';
+export 'common_types.dart';

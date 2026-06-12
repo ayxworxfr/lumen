@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-import '../../auth/services/auth_service.dart';
 import '../../../core/utils/logger_util.dart';
+import '../../auth/services/auth_service.dart';
 
 /// 首页控制器
 class HomeController extends GetxController {

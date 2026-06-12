@@ -31,6 +31,20 @@ enum AppButtonSize {
 
 /// 统一风格的按钮组件
 class AppButton extends StatelessWidget {
+  const AppButton({
+    required this.text,
+    super.key,
+    this.onPressed,
+    this.type = AppButtonType.primary,
+    this.size = AppButtonSize.medium,
+    this.isLoading = false,
+    this.disabled = false,
+    this.icon,
+    this.expanded = false,
+    this.width,
+    this.borderRadius = 8,
+  });
+
   /// 按钮文字
   final String text;
 
@@ -61,27 +75,13 @@ class AppButton extends StatelessWidget {
   /// 圆角大小
   final double borderRadius;
 
-  const AppButton({
-    super.key,
-    required this.text,
-    this.onPressed,
-    this.type = AppButtonType.primary,
-    this.size = AppButtonSize.medium,
-    this.isLoading = false,
-    this.disabled = false,
-    this.icon,
-    this.expanded = false,
-    this.width,
-    this.borderRadius = 8,
-  });
-
   @override
   Widget build(BuildContext context) {
     final buttonStyle = _getButtonStyle();
     final buttonSize = _getButtonSize();
     final isDisabled = disabled || isLoading;
 
-    Widget child = Row(
+    final Widget child = Row(
       mainAxisSize: expanded ? MainAxisSize.max : MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -124,7 +124,6 @@ class AppButton extends StatelessWidget {
           ),
           child: child,
         );
-        break;
 
       case AppButtonType.secondary:
         button = OutlinedButton(
@@ -142,7 +141,6 @@ class AppButton extends StatelessWidget {
           ),
           child: child,
         );
-        break;
 
       case AppButtonType.text:
         button = TextButton(
@@ -152,7 +150,6 @@ class AppButton extends StatelessWidget {
           ),
           child: child,
         );
-        break;
 
       case AppButtonType.danger:
         button = ElevatedButton(
@@ -168,7 +165,6 @@ class AppButton extends StatelessWidget {
           ),
           child: child,
         );
-        break;
     }
 
     if (width != null || expanded) {
@@ -224,15 +220,14 @@ class AppButton extends StatelessWidget {
 }
 
 class _ButtonSize {
-  final double fontSize;
-  final double iconSize;
-  final double horizontalPadding;
-  final double verticalPadding;
-
   const _ButtonSize({
     required this.fontSize,
     required this.iconSize,
     required this.horizontalPadding,
     required this.verticalPadding,
   });
+  final double fontSize;
+  final double iconSize;
+  final double horizontalPadding;
+  final double verticalPadding;
 }

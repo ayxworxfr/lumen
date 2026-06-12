@@ -106,7 +106,7 @@ class SettingsTab extends StatelessWidget {
     required List<Widget> children,
   }) {
     final theme = Theme.of(context);
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
@@ -138,10 +138,10 @@ class SettingsTab extends StatelessWidget {
     required Color iconColor,
     required String title,
     required bool isDark,
+    required VoidCallback onTap,
     String? subtitle,
     Color? titleColor,
     bool showArrow = true,
-    required VoidCallback onTap,
   }) {
     final theme = Theme.of(context);
     return ListTile(

@@ -11,11 +11,10 @@ import '../config/app_config.dart';
 /// - 表单验证
 /// - 窗口调整
 class Debouncer {
+  Debouncer({Duration? delay})
+    : delay = delay ?? const Duration(milliseconds: AppConfig.debounceDelay);
   final Duration delay;
   Timer? _timer;
-
-  Debouncer({Duration? delay})
-    : delay = delay ?? Duration(milliseconds: AppConfig.debounceDelay);
 
   /// 调用防抖函数
   void call(void Function() action) {
@@ -54,13 +53,13 @@ class Debouncer {
 /// - 滚动事件
 /// - 接口请求
 class Throttler {
+  Throttler({Duration? interval})
+    : interval =
+          interval ?? const Duration(milliseconds: AppConfig.throttleInterval);
   final Duration interval;
   DateTime? _lastExecution;
   Timer? _timer;
   bool _isThrottled = false;
-
-  Throttler({Duration? interval})
-    : interval = interval ?? Duration(milliseconds: AppConfig.throttleInterval);
 
   /// 调用节流函数（前沿触发）
   ///

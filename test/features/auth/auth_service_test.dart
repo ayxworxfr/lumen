@@ -27,8 +27,7 @@ class FakeHttpClient extends HttpClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
-  }) =>
-      calls.post<T>(path, data: data);
+  }) => calls.post<T>(path, data: data);
 
   @override
   Future<Response<T>> put<T>(
@@ -37,8 +36,7 @@ class FakeHttpClient extends HttpClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
-  }) =>
-      calls.put<T>(path, data: data);
+  }) => calls.put<T>(path, data: data);
 
   @override
   Future<Response<T>> get<T>(
@@ -46,8 +44,7 @@ class FakeHttpClient extends HttpClient {
     Map<String, dynamic>? queryParameters,
     Options? options,
     CancelToken? cancelToken,
-  }) =>
-      calls.get<T>(path);
+  }) => calls.get<T>(path);
 }
 
 /// Plain Dart helper to record stubbed return values — NOT a GetxService.
@@ -156,10 +153,10 @@ FakeHttpClient _buildFakeHttp() => FakeHttpClient();
 /// Build a Dio Response for HttpClient stubs (typed as dynamic to avoid
 /// generic covariance issues with Dart's type system).
 Response<dynamic> _dioResponse(dynamic data, String path) => Response<dynamic>(
-      data: data,
-      requestOptions: RequestOptions(path: path),
-      statusCode: 200,
-    );
+  data: data,
+  requestOptions: RequestOptions(path: path),
+  statusCode: 200,
+);
 
 // ─── Shared setup / teardown ─────────────────────────────────────────────────
 
@@ -193,24 +190,21 @@ void main() {
 
       // Stub the real-HTTP path so the test works when MockData.enabled==false.
       fakeHttp.calls.stubPost(
-        _dioResponse(
-          {
-            'code': 0,
-            'message': 'success',
-            'data': {
-              'accessToken': 'real_access_token',
-              'refreshToken': 'real_refresh_token',
-              'user': {
-                'id': 1,
-                'username': 'admin',
-                'nickname': '管理员',
-                'email': 'admin@example.com',
-                'avatar': '',
-              },
+        _dioResponse({
+          'code': 0,
+          'message': 'success',
+          'data': {
+            'accessToken': 'real_access_token',
+            'refreshToken': 'real_refresh_token',
+            'user': {
+              'id': 1,
+              'username': 'admin',
+              'nickname': '管理员',
+              'email': 'admin@example.com',
+              'avatar': '',
             },
           },
-          '/auth/login',
-        ),
+        }, '/auth/login'),
       );
 
       Get.put<StorageService>(fakeStorage);
@@ -233,42 +227,40 @@ void main() {
     setUp(_commonSetUp);
     tearDown(_commonTearDown);
 
-    test('logout() sets currentUser to null and clears cachedAccessToken',
-        () async {
-      final fakeStorage = _buildFakeStorage();
-      final fakeHttp = _buildFakeHttp();
+    test(
+      'logout() sets currentUser to null and clears cachedAccessToken',
+      () async {
+        final fakeStorage = _buildFakeStorage();
+        final fakeHttp = _buildFakeHttp();
 
-      // Stub post for the non-mock logout HTTP call.
-      fakeHttp.calls.stubPost(
-        _dioResponse(null, '/auth/logout'),
-      );
+        // Stub post for the non-mock logout HTTP call.
+        fakeHttp.calls.stubPost(_dioResponse(null, '/auth/logout'));
 
-      Get.put<StorageService>(fakeStorage);
-      Get.put<HttpClient>(fakeHttp);
-      final authService = Get.put<AuthService>(AuthService());
+        Get.put<StorageService>(fakeStorage);
+        Get.put<HttpClient>(fakeHttp);
+        final authService = Get.put<AuthService>(AuthService());
 
-      // Manually inject a logged-in state without going through login().
-      authService.currentUser.value = const UserModel(
-        id: 1,
-        username: 'test',
-        nickname: 'Test User',
-        email: 'test@test.com',
-      );
+        // Manually inject a logged-in state without going through login().
+        authService.currentUser.value = const UserModel(
+          id: 1,
+          username: 'test',
+          nickname: 'Test User',
+          email: 'test@test.com',
+        );
 
-      await authService.logout();
+        await authService.logout();
 
-      expect(authService.currentUser.value, isNull);
-      expect(authService.cachedAccessToken, isNull);
-      expect(authService.isLoggedIn, isFalse);
-    });
+        expect(authService.currentUser.value, isNull);
+        expect(authService.cachedAccessToken, isNull);
+        expect(authService.isLoggedIn, isFalse);
+      },
+    );
 
     test('logout() writes sessionActive=false to storage', () async {
       final fakeStorage = _buildFakeStorage();
       final fakeHttp = _buildFakeHttp();
 
-      fakeHttp.calls.stubPost(
-        _dioResponse(null, '/auth/logout'),
-      );
+      fakeHttp.calls.stubPost(_dioResponse(null, '/auth/logout'));
 
       Get.put<StorageService>(fakeStorage);
       Get.put<HttpClient>(fakeHttp);
@@ -303,16 +295,13 @@ void main() {
       final fakeHttp = _buildFakeHttp();
 
       fakeHttp.calls.stubPut(
-        _dioResponse(
-          {
-            'id': 1,
-            'username': 'admin',
-            'nickname': '新昵称',
-            'email': 'admin@example.com',
-            'avatar': '',
-          },
-          '/user/profile',
-        ),
+        _dioResponse({
+          'id': 1,
+          'username': 'admin',
+          'nickname': '新昵称',
+          'email': 'admin@example.com',
+          'avatar': '',
+        }, '/user/profile'),
       );
 
       Get.put<StorageService>(fakeStorage);
@@ -327,35 +316,35 @@ void main() {
       expect(authService.currentUser.value!.nickname, equals('新昵称'));
     });
 
-    test('updateUserInfo() persists updated user to Hive via storage', () async {
-      final fakeStorage = _buildFakeStorage();
-      final fakeHttp = _buildFakeHttp();
+    test(
+      'updateUserInfo() persists updated user to Hive via storage',
+      () async {
+        final fakeStorage = _buildFakeStorage();
+        final fakeHttp = _buildFakeHttp();
 
-      fakeHttp.calls.stubPut(
-        _dioResponse(
-          {
+        fakeHttp.calls.stubPut(
+          _dioResponse({
             'id': 1,
             'username': 'admin',
             'nickname': '持久化昵称',
             'email': 'admin@example.com',
-          },
-          '/user/profile',
-        ),
-      );
+          }, '/user/profile'),
+        );
 
-      Get.put<StorageService>(fakeStorage);
-      Get.put<HttpClient>(fakeHttp);
-      final authService = Get.put<AuthService>(AuthService());
+        Get.put<StorageService>(fakeStorage);
+        Get.put<HttpClient>(fakeHttp);
+        final authService = Get.put<AuthService>(AuthService());
 
-      await authService.updateUserInfo({'nickname': '持久化昵称'});
+        await authService.updateUserInfo({'nickname': '持久化昵称'});
 
-      // FakeStorageService records the saved data in _userData.
-      final stored = fakeStorage.getUserData<Map<String, dynamic>>(
-        StorageKeys.currentUser,
-      );
-      expect(stored, isNotNull);
-      expect(stored!['nickname'], equals('持久化昵称'));
-    });
+        // FakeStorageService records the saved data in _userData.
+        final stored = fakeStorage.getUserData<Map<String, dynamic>>(
+          StorageKeys.currentUser,
+        );
+        expect(stored, isNotNull);
+        expect(stored!['nickname'], equals('持久化昵称'));
+      },
+    );
   });
 
   // ── F-4: loadUserFromLocal restores state from storage ───────────────────
@@ -371,7 +360,10 @@ void main() {
         final fakeHttp = _buildFakeHttp();
 
         // Seed persisted data into the fake.
-        fakeStorage.seedSecure(StorageKeys.accessToken, 'restored_access_token');
+        fakeStorage.seedSecure(
+          StorageKeys.accessToken,
+          'restored_access_token',
+        );
         fakeStorage.seedUserData(StorageKeys.currentUser, <String, dynamic>{
           'id': 42,
           'username': 'stored_user',
