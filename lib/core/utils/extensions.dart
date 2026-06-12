@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:lumen/l10n/generated/app_localizations.dart';
 
 /// 字符串扩展
-extension FlutterBoostStringExtension on String {
+extension LumenStringExtension on String {
   /// 每个单词首字母大写
   String toTitleCase() {
     return split(' ')

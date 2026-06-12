@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart' hide Response;
-
 import 'package:lumen/core/network/interceptors/auth_interceptor.dart';
 import 'package:lumen/features/auth/models/user_model.dart';
 import 'package:lumen/features/auth/services/auth_service.dart';
