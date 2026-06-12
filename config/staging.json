@@ -1,0 +1,6 @@
+{
+  "APP_ENV": "staging",
+  "API_BASE_URL": "https://staging-api.example.com/api",
+  "WS_URL": "wss://staging-api.example.com/ws",
+  "STATIC_URL": "https://staging-static.example.com"
+}

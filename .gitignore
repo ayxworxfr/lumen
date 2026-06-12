@@ -6,11 +6,7 @@
 .DS_Store
 
 # 环境配置（dart-define-from-file）
-# config/*.json 包含 API URL 等配置，生产项目中应加入 gitignore
-# 提交 *.example.json 作为模板
-config/dev.json
-config/staging.json
-config/prod.json
+# 当前 config/*.json 只包含公开环境 URL；不要在这里提交密钥或 token。
 .atom/
 .build/
 .buildlog/
