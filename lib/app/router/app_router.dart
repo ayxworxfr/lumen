@@ -6,8 +6,17 @@ import '../../core/storage/storage_service.dart';
 import '../../features/auth/bindings/auth_binding.dart';
 import '../../features/auth/views/login_page.dart';
 import '../../features/auth/views/register_page.dart';
+import '../../features/compress/bindings/compress_binding.dart';
+import '../../features/compress/views/preset_sheet.dart';
+import '../../features/compress/views/progress_page.dart';
+import '../../features/history/bindings/history_binding.dart';
+import '../../features/history/views/compare_page.dart';
+import '../../features/history/views/history_page.dart';
 import '../../features/home/bindings/home_binding.dart';
-import '../../features/home/views/home_page.dart';
+import '../../features/home/views/main_shell.dart';
+import '../../features/home/views/settings_page.dart';
+import '../../features/library/bindings/library_binding.dart';
+import '../../features/library/views/library_page.dart';
 import '../../features/splash/views/splash_page.dart';
 import '../../shared/constants/storage_keys.dart';
 
@@ -16,17 +25,25 @@ abstract class AppRoutes {
   static const splash = '/splash';
   static const login = '/login';
   static const register = '/register';
-  static const home = '/home';
+  static const main = '/main';
+  static const mainLibrary = '/main/library';
+  static const mainHistory = '/main/history';
+  static const mainSettings = '/main/settings';
+  static const compressPreset = '/compress/preset';
+  static const compressProgress = '/compress/progress';
+
+  static String historyDetail(String recordId) => '/history/$recordId';
 }
 
 /// 应用路由配置
 ///
 /// 使用 go_router。[navigatorKey] 暴露给需要在 BuildContext 之外导航的场景
-/// （如 Controller 中调用 AppRouter.go('/home')）。
+/// （如 Controller 中调用 AppRouter.go('/main')）。
 class AppRouter {
   AppRouter._();
 
   static final navigatorKey = GlobalKey<NavigatorState>();
+  static final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
   static final router = GoRouter(
     navigatorKey: navigatorKey,
@@ -54,17 +71,68 @@ class AppRouter {
           );
         },
       ),
-      GoRoute(
-        path: AppRoutes.home,
-        pageBuilder: (_, __) {
+      ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        pageBuilder: (_, __, child) {
           HomeBinding().dependencies();
-          return const NoTransitionPage(child: HomePage());
+          LibraryBinding().dependencies();
+          HistoryBinding().dependencies();
+          return NoTransitionPage(child: MainShell(child: child));
+        },
+        routes: [
+          GoRoute(
+            path: AppRoutes.mainLibrary,
+            pageBuilder: (_, __) =>
+                const NoTransitionPage(child: LibraryPage()),
+          ),
+          GoRoute(
+            path: AppRoutes.mainHistory,
+            pageBuilder: (_, __) =>
+                const NoTransitionPage(child: HistoryPage()),
+          ),
+          GoRoute(
+            path: AppRoutes.mainSettings,
+            pageBuilder: (_, __) =>
+                const NoTransitionPage(child: SettingsPage()),
+          ),
+        ],
+      ),
+      GoRoute(path: AppRoutes.main, redirect: (_, __) => AppRoutes.mainLibrary),
+      GoRoute(
+        path: AppRoutes.compressPreset,
+        pageBuilder: (_, __) {
+          CompressBinding().dependencies();
+          return const CustomTransitionPage(
+            child: PresetSheet(),
+            transitionsBuilder: _slideFromBottom,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.compressProgress,
+        pageBuilder: (_, __) {
+          CompressBinding().dependencies();
+          return const CustomTransitionPage(
+            child: ProgressPage(),
+            transitionsBuilder: _slideFromRight,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/history/:recordId',
+        pageBuilder: (_, state) {
+          HistoryBinding().dependencies();
+          final recordId = state.pathParameters['recordId']!;
+          return CustomTransitionPage(
+            child: ComparePage(recordId: recordId),
+            transitionsBuilder: _slideFromRight,
+          );
         },
       ),
     ],
   );
 
-  /// Guards: protect /home when not authenticated.
+  /// Guards: protect /main/* when not authenticated.
   /// 使用 sessionActive 布尔标志同步判断登录状态，避免直接读取异步安全存储。
   static String? _guard(BuildContext context, GoRouterState state) {
     final unprotected = {AppRoutes.splash, AppRoutes.login, AppRoutes.register};
@@ -100,6 +168,21 @@ class AppRouter {
     return SlideTransition(
       position: Tween<Offset>(
         begin: const Offset(1, 0),
+        end: Offset.zero,
+      ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut)),
+      child: child,
+    );
+  }
+
+  static Widget _slideFromBottom(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return SlideTransition(
+      position: Tween<Offset>(
+        begin: const Offset(0, 1),
         end: Offset.zero,
       ).animate(CurvedAnimation(parent: animation, curve: Curves.easeInOut)),
       child: child,

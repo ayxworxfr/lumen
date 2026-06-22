@@ -59,7 +59,7 @@ class _SplashPageState extends State<SplashPage>
     final token = storage.getString(StorageKeys.accessToken);
     final isLoggedIn = token != null && token.isNotEmpty;
 
-    context.go(isLoggedIn ? AppRoutes.home : AppRoutes.login);
+    context.go(isLoggedIn ? AppRoutes.main : AppRoutes.login);
   }
 
   @override

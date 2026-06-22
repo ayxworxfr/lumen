@@ -18,6 +18,10 @@ class StorageKeys {
   /// 是否有活跃会话（由 AuthService 在登录/登出时同步更新，用于路由守卫同步检查）
   static const String sessionActive = 'session_active';
 
+  // ==================== SharedPreferences Keys ====================
+  /// 默认压缩预设
+  static const String defaultCompressPreset = 'default_compress_preset';
+
   // ==================== Hive Box Names ====================
   /// 用户信息 Box
   static const String userBox = 'user_box';
@@ -27,6 +31,12 @@ class StorageKeys {
 
   /// 设置 Box
   static const String settingsBox = 'settings_box';
+
+  /// 压缩记录 Box
+  static const String compressedRecordsBox = 'compressed_records';
+
+  /// 待执行队列 Box（跨重启续跑）
+  static const String pendingJobsBox = 'pending_jobs';
 
   // ==================== Hive Keys ====================
   /// 当前用户

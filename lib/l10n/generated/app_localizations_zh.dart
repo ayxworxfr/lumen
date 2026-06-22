@@ -81,6 +81,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get commonOr => '或';
 
   @override
+  String get commonSelectAll => '全选';
+
+  @override
   String get validationUsernameRequired => '请输入用户名';
 
   @override
@@ -402,4 +405,158 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get widgetsListNoMore => '没有更多了';
+
+  @override
+  String get pagesLibraryTitle => '相册';
+
+  @override
+  String pagesLibraryEstimatedSavings(String mb) {
+    return '预计可节省：$mb MB';
+  }
+
+  @override
+  String get pagesLibrarySortBySize => '按大小排序';
+
+  @override
+  String get pagesLibrarySortByDate => '按日期排序';
+
+  @override
+  String get pagesLibraryLimitedAccess => '当前仅可访问部分照片，前往设置开放完整权限。';
+
+  @override
+  String get pagesLibraryGoSettings => '去设置';
+
+  @override
+  String get pagesLibraryPermissionDenied => '需要相册权限才能浏览和压缩照片，请授权。';
+
+  @override
+  String pagesLibrarySelectedCount(int count) {
+    return '已选 $count 张';
+  }
+
+  @override
+  String get pagesLibraryCompress => '压缩';
+
+  @override
+  String get pagesCompressSelectPreset => '选择压缩质量';
+
+  @override
+  String get pagesCompressPresetSmaller => '更小';
+
+  @override
+  String get pagesCompressPresetSmallerDesc => 'AVIF Q70 — 最小体积';
+
+  @override
+  String get pagesCompressPresetBalanced => '平衡';
+
+  @override
+  String get pagesCompressPresetBalancedDesc => 'AVIF Q85 — 推荐平衡（默认）';
+
+  @override
+  String get pagesCompressPresetHigherQuality => '更高质量';
+
+  @override
+  String get pagesCompressPresetHigherQualityDesc => 'AVIF Q92 — 最佳视觉质量';
+
+  @override
+  String get pagesCompressProgress => '压缩中';
+
+  @override
+  String get pagesCompressNoJobs => '队列为空';
+
+  @override
+  String get pagesCompressDone => '全部完成';
+
+  @override
+  String pagesCompressRunning(int done, int total) {
+    return '已压缩 $done/$total';
+  }
+
+  @override
+  String pagesCompressSaved(String size) {
+    return '共节省 $size';
+  }
+
+  @override
+  String pagesCompressJobSaved(int pct) {
+    return '节省 $pct%';
+  }
+
+  @override
+  String get pagesCompressJobFailed => '压缩失败';
+
+  @override
+  String get pagesCompressJobPending => '等待中...';
+
+  @override
+  String get pagesCompressJobRunning => '压缩中...';
+
+  @override
+  String get pagesCompressJobCanceled => '已取消';
+
+  @override
+  String get pagesCompressNoSavings => '无压缩收益，文件未保存';
+
+  @override
+  String pagesCompressRetryFailed(int n) {
+    return '重试（$n 张失败）';
+  }
+
+  @override
+  String get pagesCompressViewHistory => '查看结果';
+
+  @override
+  String get pagesCompressCancelAll => '取消全部';
+
+  @override
+  String get pagesHistoryTitle => '已压缩';
+
+  @override
+  String pagesHistoryTotalSaved(String size) {
+    return '共节省：$size';
+  }
+
+  @override
+  String pagesHistoryCount(int n) {
+    return '$n 张';
+  }
+
+  @override
+  String pagesHistorySaved(String size) {
+    return '节省 $size';
+  }
+
+  @override
+  String get pagesCompareTitle => '前后对比';
+
+  @override
+  String get pagesCompareNotFound => '记录不存在';
+
+  @override
+  String get pagesCompareOriginal => '原图';
+
+  @override
+  String get pagesCompareCompressed => 'AVIF';
+
+  @override
+  String get pagesCompareSaved => '节省';
+
+  @override
+  String get pagesCompareDeleteOriginal => '删除原图';
+
+  @override
+  String get pagesCompareDeleteOriginalTitle => '确认删除原图？';
+
+  @override
+  String get pagesCompareDeleteOriginalConfirm =>
+      '原图将从相册中永久删除，已压缩的 AVIF 文件会保留。此操作不可撤销，请谨慎操作。';
+
+  @override
+  String get pagesCompareRollback => '回滚';
+
+  @override
+  String get pagesCompareRollbackTitle => '删除压缩文件？';
+
+  @override
+  String get pagesCompareRollbackConfirm => '将删除对应的 AVIF 压缩文件，原图不受影响。';
 }

@@ -1,14 +1,16 @@
 import 'package:get/get.dart';
 
+import '../../../app/router/app_router.dart';
 import '../../../core/utils/logger_util.dart';
 import '../../auth/services/auth_service.dart';
 
-/// 首页控制器
+/// 主 Shell 控制器
+///
+/// 管理底部 Tab 索引及 Tab 间导航。
 class HomeController extends GetxController {
-  // 当前选中的底部导航索引
+  /// 当前选中的底部导航索引
   final currentIndex = 0.obs;
 
-  // 获取认证服务
   AuthService get _authService => Get.find<AuthService>();
 
   /// 是否已登录
@@ -21,11 +23,19 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    LoggerUtil.i('首页初始化');
+    LoggerUtil.i('MainShell 初始化');
   }
 
-  /// 切换底部导航
+  /// 切换底部导航，并跳转对应路由
   void changeTab(int index) {
     currentIndex.value = index;
+    switch (index) {
+      case 0:
+        AppRouter.go(AppRoutes.mainLibrary);
+      case 1:
+        AppRouter.go(AppRoutes.mainHistory);
+      case 2:
+        AppRouter.go(AppRoutes.mainSettings);
+    }
   }
 }

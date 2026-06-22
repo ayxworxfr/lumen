@@ -133,11 +133,17 @@ void main() {
       await settingsBox.clear();
     });
 
-    test('HiveBox enum has exactly user/cache/settings values', () {
-      expect(HiveBox.values.length, equals(3));
+    test('HiveBox enum has exactly user/cache/settings/compressedRecords/pendingJobs values', () {
+      expect(HiveBox.values.length, equals(5));
       expect(
         HiveBox.values,
-        containsAll([HiveBox.user, HiveBox.cache, HiveBox.settings]),
+        containsAll([
+          HiveBox.user,
+          HiveBox.cache,
+          HiveBox.settings,
+          HiveBox.compressedRecords,
+          HiveBox.pendingJobs,
+        ]),
       );
     });
 

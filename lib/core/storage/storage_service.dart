@@ -94,6 +94,10 @@ class StorageService extends GetxService {
         value = HiveBoxes.cacheBox.get(key);
       case HiveBox.settings:
         value = HiveBoxes.settingsBox.get(key);
+      case HiveBox.compressedRecords:
+        value = HiveBoxes.compressedRecordsBox.get(key);
+      case HiveBox.pendingJobs:
+        value = HiveBoxes.pendingJobsBox.get(key);
     }
     if (value == null) return null;
     // Hive on web returns LinkedMap<dynamic, dynamic> for stored Maps;
@@ -113,6 +117,10 @@ class StorageService extends GetxService {
         await HiveBoxes.cacheBox.put(key, value);
       case HiveBox.settings:
         await HiveBoxes.settingsBox.put(key, value);
+      case HiveBox.compressedRecords:
+        await HiveBoxes.compressedRecordsBox.put(key, value);
+      case HiveBox.pendingJobs:
+        await HiveBoxes.pendingJobsBox.put(key, value);
     }
   }
 
@@ -125,6 +133,10 @@ class StorageService extends GetxService {
         await HiveBoxes.cacheBox.delete(key);
       case HiveBox.settings:
         await HiveBoxes.settingsBox.delete(key);
+      case HiveBox.compressedRecords:
+        await HiveBoxes.compressedRecordsBox.delete(key);
+      case HiveBox.pendingJobs:
+        await HiveBoxes.pendingJobsBox.delete(key);
     }
   }
 
@@ -137,6 +149,10 @@ class StorageService extends GetxService {
         await HiveBoxes.cacheBox.clear();
       case HiveBox.settings:
         await HiveBoxes.settingsBox.clear();
+      case HiveBox.compressedRecords:
+        await HiveBoxes.compressedRecordsBox.clear();
+      case HiveBox.pendingJobs:
+        await HiveBoxes.pendingJobsBox.clear();
     }
   }
 

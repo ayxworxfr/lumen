@@ -52,5 +52,5 @@ class LoggerUtil {
   static void w(dynamic message, [dynamic error, StackTrace? stackTrace]) =>
       warning(message, error, stackTrace);
   static void e(dynamic message, [dynamic error, StackTrace? stackTrace]) =>
-      error(message, error, stackTrace);
+      LoggerUtil.error(message, error, stackTrace);
 }

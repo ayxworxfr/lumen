@@ -25,6 +25,7 @@
   "commonBackToHome": "返回首页",
   "commonAppTagline": "企业级 Flutter 脚手架",
   "commonOr": "或",
+  "commonSelectAll": "全选",
 
   "validationUsernameRequired": "请输入用户名",
   "validationUsernameTooShort": "用户名至少 3 个字符",
@@ -148,5 +149,100 @@
   "widgetsEmptyNoFavoriteAction": "去发现",
 
   "widgetsListLoadMore": "上拉加载更多",
-  "widgetsListNoMore": "没有更多了"
+  "widgetsListNoMore": "没有更多了",
+
+  "pagesLibraryTitle": "相册",
+  "pagesLibraryEstimatedSavings": "预计可节省：{mb} MB",
+  "@pagesLibraryEstimatedSavings": {
+    "placeholders": {
+      "mb": { "type": "String" }
+    }
+  },
+  "pagesLibrarySortBySize": "按大小排序",
+  "pagesLibrarySortByDate": "按日期排序",
+  "pagesLibraryLimitedAccess": "当前仅可访问部分照片，前往设置开放完整权限。",
+  "pagesLibraryGoSettings": "去设置",
+  "pagesLibraryPermissionDenied": "需要相册权限才能浏览和压缩照片，请授权。",
+  "pagesLibrarySelectedCount": "已选 {count} 张",
+  "@pagesLibrarySelectedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "pagesLibraryCompress": "压缩",
+
+  "pagesCompressSelectPreset": "选择压缩质量",
+  "pagesCompressPresetSmaller": "更小",
+  "pagesCompressPresetSmallerDesc": "AVIF Q70 — 最小体积",
+  "pagesCompressPresetBalanced": "平衡",
+  "pagesCompressPresetBalancedDesc": "AVIF Q85 — 推荐平衡（默认）",
+  "pagesCompressPresetHigherQuality": "更高质量",
+  "pagesCompressPresetHigherQualityDesc": "AVIF Q92 — 最佳视觉质量",
+  "pagesCompressProgress": "压缩中",
+  "pagesCompressNoJobs": "队列为空",
+  "pagesCompressDone": "全部完成",
+  "pagesCompressRunning": "已压缩 {done}/{total}",
+  "@pagesCompressRunning": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "pagesCompressSaved": "共节省 {size}",
+  "@pagesCompressSaved": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "pagesCompressJobSaved": "节省 {pct}%",
+  "@pagesCompressJobSaved": {
+    "placeholders": {
+      "pct": { "type": "int" }
+    }
+  },
+  "pagesCompressJobFailed": "压缩失败",
+  "pagesCompressJobPending": "等待中...",
+  "pagesCompressJobRunning": "压缩中...",
+  "pagesCompressJobCanceled": "已取消",
+  "pagesCompressNoSavings": "无压缩收益，文件未保存",
+  "pagesCompressRetryFailed": "重试（{n} 张失败）",
+  "@pagesCompressRetryFailed": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "pagesCompressViewHistory": "查看结果",
+  "pagesCompressCancelAll": "取消全部",
+
+  "pagesHistoryTitle": "已压缩",
+  "pagesHistoryTotalSaved": "共节省：{size}",
+  "@pagesHistoryTotalSaved": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "pagesHistoryCount": "{n} 张",
+  "@pagesHistoryCount": {
+    "placeholders": {
+      "n": { "type": "int" }
+    }
+  },
+  "pagesHistorySaved": "节省 {size}",
+  "@pagesHistorySaved": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+
+  "pagesCompareTitle": "前后对比",
+  "pagesCompareNotFound": "记录不存在",
+  "pagesCompareOriginal": "原图",
+  "pagesCompareCompressed": "AVIF",
+  "pagesCompareSaved": "节省",
+  "pagesCompareDeleteOriginal": "删除原图",
+  "pagesCompareDeleteOriginalTitle": "确认删除原图？",
+  "pagesCompareDeleteOriginalConfirm": "原图将从相册中永久删除，已压缩的 AVIF 文件会保留。此操作不可撤销，请谨慎操作。",
+  "pagesCompareRollback": "回滚",
+  "pagesCompareRollbackTitle": "删除压缩文件？",
+  "pagesCompareRollbackConfirm": "将删除对应的 AVIF 压缩文件，原图不受影响。"
 }

@@ -192,7 +192,7 @@ class SettingsTab extends StatelessWidget {
   ) {
     showDialog<void>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(l10n.pagesSettingsTheme),
         content: Column(
@@ -206,7 +206,7 @@ class SettingsTab extends StatelessWidget {
               ),
               onTap: () {
                 appCtrl.changeTheme(ThemeMode.light);
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop();
               },
             ),
             ListTile(
@@ -217,7 +217,7 @@ class SettingsTab extends StatelessWidget {
               ),
               onTap: () {
                 appCtrl.changeTheme(ThemeMode.dark);
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop();
               },
             ),
             ListTile(
@@ -228,7 +228,7 @@ class SettingsTab extends StatelessWidget {
               ),
               onTap: () {
                 appCtrl.changeTheme(ThemeMode.system);
-                Navigator.of(context).pop();
+                Navigator.of(dialogContext).pop();
               },
             ),
           ],
@@ -240,7 +240,7 @@ class SettingsTab extends StatelessWidget {
   void _showAboutDialog(BuildContext context, AppLocalizations l10n) {
     showDialog<void>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Lumen'),
         content: Column(
@@ -254,7 +254,7 @@ class SettingsTab extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(l10n.commonClose),
           ),
         ],
@@ -265,18 +265,18 @@ class SettingsTab extends StatelessWidget {
   void _showLogoutConfirm(BuildContext context, AppLocalizations l10n) {
     showDialog<void>(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(l10n.pagesSettingsLogout),
         content: Text(l10n.pagesSettingsLogoutConfirm),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text(l10n.commonCancel),
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(dialogContext).pop();
               Get.find<AuthController>().logout();
             },
             style: TextButton.styleFrom(foregroundColor: AppColors.error),

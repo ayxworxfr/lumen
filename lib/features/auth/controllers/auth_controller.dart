@@ -81,7 +81,7 @@ class AuthController extends GetxController {
 
       LoggerUtil.i('Login succeeded');
       _clearForm();
-      AppRouter.go(AppRoutes.home);
+      AppRouter.go(AppRoutes.main);
     } catch (e) {
       errorMessage.value = e.toString();
       LoggerUtil.e('Login failed', e);
@@ -113,7 +113,7 @@ class AuthController extends GetxController {
 
       LoggerUtil.i('Registration succeeded');
       _clearForm();
-      AppRouter.go(AppRoutes.home);
+      AppRouter.go(AppRoutes.main);
     } catch (e) {
       errorMessage.value = e.toString();
       LoggerUtil.e('Registration failed', e);

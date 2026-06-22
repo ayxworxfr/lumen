@@ -81,6 +81,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonOr => 'OR';
 
   @override
+  String get commonSelectAll => 'Select All';
+
+  @override
   String get validationUsernameRequired => 'Username is required';
 
   @override
@@ -415,4 +418,163 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get widgetsListNoMore => 'No more data';
+
+  @override
+  String get pagesLibraryTitle => 'Library';
+
+  @override
+  String pagesLibraryEstimatedSavings(String mb) {
+    return 'Estimated savings: $mb MB';
+  }
+
+  @override
+  String get pagesLibrarySortBySize => 'Sort by size';
+
+  @override
+  String get pagesLibrarySortByDate => 'Sort by date';
+
+  @override
+  String get pagesLibraryLimitedAccess =>
+      'Limited photo access. Go to Settings to allow full access.';
+
+  @override
+  String get pagesLibraryGoSettings => 'Go to Settings';
+
+  @override
+  String get pagesLibraryPermissionDenied =>
+      'Photo library access is required to browse and compress photos.';
+
+  @override
+  String pagesLibrarySelectedCount(int count) {
+    return '$count selected';
+  }
+
+  @override
+  String get pagesLibraryCompress => 'Compress';
+
+  @override
+  String get pagesCompressSelectPreset => 'Select Quality';
+
+  @override
+  String get pagesCompressPresetSmaller => 'Smaller';
+
+  @override
+  String get pagesCompressPresetSmallerDesc => 'AVIF Q70 — smallest file size';
+
+  @override
+  String get pagesCompressPresetBalanced => 'Balanced';
+
+  @override
+  String get pagesCompressPresetBalancedDesc =>
+      'AVIF Q85 — recommended balance (default)';
+
+  @override
+  String get pagesCompressPresetHigherQuality => 'Higher Quality';
+
+  @override
+  String get pagesCompressPresetHigherQualityDesc =>
+      'AVIF Q92 — best visual quality';
+
+  @override
+  String get pagesCompressProgress => 'Compressing';
+
+  @override
+  String get pagesCompressNoJobs => 'No items in queue';
+
+  @override
+  String get pagesCompressDone => 'All done';
+
+  @override
+  String pagesCompressRunning(int done, int total) {
+    return '$done/$total compressed';
+  }
+
+  @override
+  String pagesCompressSaved(String size) {
+    return 'Saved $size total';
+  }
+
+  @override
+  String pagesCompressJobSaved(int pct) {
+    return 'Saved $pct%';
+  }
+
+  @override
+  String get pagesCompressJobFailed => 'Compression failed';
+
+  @override
+  String get pagesCompressJobPending => 'Waiting...';
+
+  @override
+  String get pagesCompressJobRunning => 'Compressing...';
+
+  @override
+  String get pagesCompressJobCanceled => 'Canceled';
+
+  @override
+  String get pagesCompressNoSavings => 'No benefit — file not saved';
+
+  @override
+  String pagesCompressRetryFailed(int n) {
+    return 'Retry ($n failed)';
+  }
+
+  @override
+  String get pagesCompressViewHistory => 'View Results';
+
+  @override
+  String get pagesCompressCancelAll => 'Cancel All';
+
+  @override
+  String get pagesHistoryTitle => 'Compressed';
+
+  @override
+  String pagesHistoryTotalSaved(String size) {
+    return 'Total saved: $size';
+  }
+
+  @override
+  String pagesHistoryCount(int n) {
+    return '$n photos';
+  }
+
+  @override
+  String pagesHistorySaved(String size) {
+    return 'Saved $size';
+  }
+
+  @override
+  String get pagesCompareTitle => 'Before / After';
+
+  @override
+  String get pagesCompareNotFound => 'Record not found';
+
+  @override
+  String get pagesCompareOriginal => 'Original';
+
+  @override
+  String get pagesCompareCompressed => 'AVIF';
+
+  @override
+  String get pagesCompareSaved => 'Saved';
+
+  @override
+  String get pagesCompareDeleteOriginal => 'Delete Original';
+
+  @override
+  String get pagesCompareDeleteOriginalTitle => 'Delete Original Photo?';
+
+  @override
+  String get pagesCompareDeleteOriginalConfirm =>
+      'This will permanently delete the original from your photo library. The compressed AVIF file will remain. This action cannot be undone.';
+
+  @override
+  String get pagesCompareRollback => 'Roll Back';
+
+  @override
+  String get pagesCompareRollbackTitle => 'Remove Compressed File?';
+
+  @override
+  String get pagesCompareRollbackConfirm =>
+      'This will delete the compressed AVIF file. Your original photo will remain unchanged.';
 }
