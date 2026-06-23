@@ -577,4 +577,81 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pagesCompareRollbackConfirm =>
       'This will delete the compressed AVIF file. Your original photo will remain unchanged.';
+
+  @override
+  String get pagesLibraryByTime => 'By Time';
+
+  @override
+  String get pagesLibraryByAlbum => 'By Album';
+
+  @override
+  String get pagesLibrarySelect => 'Select';
+
+  @override
+  String pagesLibraryPhotoCount(int count) {
+    return '$count Photos';
+  }
+
+  @override
+  String get pagesGalleryShare => 'Share';
+
+  @override
+  String get pagesGalleryCompress => 'Compress';
+
+  @override
+  String get pagesGalleryCompare => 'Compare';
+
+  @override
+  String get pagesGalleryEdit => 'Edit';
+
+  @override
+  String pagesGalleryPhotoIndex(int current, int total) {
+    return '$current/$total';
+  }
+
+  @override
+  String get pagesEditTitle => 'Edit';
+
+  @override
+  String get pagesEditBrightness => 'Brightness';
+
+  @override
+  String get pagesEditContrast => 'Contrast';
+
+  @override
+  String get pagesEditSaturation => 'Saturation';
+
+  @override
+  String get pagesEditCrop => 'Crop';
+
+  @override
+  String get pagesEditRotate => 'Rotate';
+
+  @override
+  String get pagesEditReset => 'Reset';
+
+  @override
+  String get pagesEditSaveTitle => 'Save Options';
+
+  @override
+  String get pagesEditSaveNew => 'Save as New File';
+
+  @override
+  String get pagesEditSaveNewDesc => 'Keep original, save a new edited copy';
+
+  @override
+  String get pagesEditOverwrite => 'Overwrite Original';
+
+  @override
+  String get pagesEditOverwriteDesc =>
+      'Replace the original system photo with the edited version';
+
+  @override
+  String get pagesEditCompressNow => 'Compress Now';
+
+  @override
+  String get pagesEditSavedSuccess => 'Saved';
+
+  @override
+  String get pagesEditSaveFailed => 'Save Failed';
 }

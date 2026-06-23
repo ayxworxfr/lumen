@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 
+import '../../../app/router/app_router.dart';
 import '../../../core/l10n/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_button.dart';
@@ -11,22 +12,31 @@ import '../../../core/widgets/app_loading.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../compress/models/compress_job.dart';
 import '../controllers/library_controller.dart';
-import '../widgets/photo_grid.dart';
+import '../models/photo_asset.dart';
+import '../widgets/album_grid_widget.dart';
+import '../widgets/photo_grid_cell.dart';
 
-/// 系统相册浏览页
+/// 相册浏览页
+///
+/// 顶部 Tab 切换「按时间」（图片网格 + 年月分组）和「按相册」（系统相册列表）。
 class LibraryPage extends GetView<LibraryController> {
   const LibraryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      appBar: _buildAppBar(context, l10n, isDark),
-      body: Obx(() => _buildBody(context, l10n)),
+      appBar: _buildAppBar(context, l10n),
+      body: Obx(() {
+        if (controller.isLoading.value) return AppLoading.page();
+        if (!controller.hasPermission.value) {
+          return _buildPermissionDenied(context, l10n);
+        }
+        return _buildContent(context, l10n);
+      }),
       bottomNavigationBar: Obx(
-        () => controller.selectedIds.isNotEmpty
+        () => controller.isSelectionMode.value
             ? _buildSelectionBar(context, l10n)
             : const SizedBox.shrink(),
       ),
@@ -36,20 +46,24 @@ class LibraryPage extends GetView<LibraryController> {
   PreferredSizeWidget _buildAppBar(
     BuildContext context,
     AppLocalizations l10n,
-    bool isDark,
   ) {
     return AppBar(
       title: Text(l10n.pagesLibraryTitle),
       centerTitle: true,
       elevation: 0,
       actions: [
-        Obx(
-          () => controller.selectedIds.isNotEmpty
-              ? TextButton(
-                  onPressed: controller.clearSelection,
-                  child: Text(l10n.commonCancel),
-                )
-              : PopupMenuButton<LibrarySortOrder>(
+        Obx(() {
+          if (controller.isSelectionMode.value) {
+            return TextButton(
+              onPressed: controller.exitSelectionMode,
+              child: Text(l10n.commonCancel),
+            );
+          }
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (controller.tabMode.value == LibraryTabMode.byTime)
+                PopupMenuButton<LibrarySortOrder>(
                   icon: const Icon(Icons.sort),
                   onSelected: controller.changeSortOrder,
                   itemBuilder: (_) => [
@@ -63,51 +77,59 @@ class LibraryPage extends GetView<LibraryController> {
                     ),
                   ],
                 ),
-        ),
+              TextButton(
+                onPressed: () => controller.enterSelectionMode(),
+                child: Text(l10n.pagesLibrarySelect),
+              ),
+            ],
+          );
+        }),
       ],
     );
   }
 
-  Widget _buildBody(BuildContext context, AppLocalizations l10n) {
-    if (controller.isLoading.value) {
-      return AppLoading.page();
-    }
-
-    if (!controller.hasPermission.value) {
-      return _buildPermissionDenied(context, l10n);
-    }
-
-    if (controller.photos.isEmpty) {
-      return AppEmpty.noData();
-    }
-
+  /// 主内容区：有限访问 banner + Tab 切换 + 视图
+  Widget _buildContent(BuildContext context, AppLocalizations l10n) {
     return Column(
       children: [
         if (controller.isLimitedAccess.value)
           _buildLimitedAccessBanner(context, l10n),
-        _buildSavingsHeader(context, l10n),
-        const Expanded(child: PhotoGrid()),
+        _buildTabBar(context, l10n),
+        Expanded(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 180),
+            child: controller.tabMode.value == LibraryTabMode.byTime
+                ? const _ByTimeView(key: ValueKey('byTime'))
+                : const _ByAlbumView(key: ValueKey('byAlbum')),
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildSavingsHeader(BuildContext context, AppLocalizations l10n) {
-    final savings = controller.estimatedSavings;
-    if (savings <= 0) return const SizedBox.shrink();
-
+  Widget _buildTabBar(BuildContext context, AppLocalizations l10n) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final savingsMB = (savings / (1024 * 1024)).toStringAsFixed(1);
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      color: AppColors.primary.withValues(alpha: 0.1),
-      child: Text(
-        l10n.pagesLibraryEstimatedSavings(savingsMB),
-        style: TextStyle(
-          color: isDark ? AppColors.primaryLight : AppColors.primaryDark,
-          fontWeight: FontWeight.w500,
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: isDark ? AppColors.borderDark : Colors.grey.shade200,
+          ),
         ),
+      ),
+      child: Row(
+        children: [
+          _TabItem(
+            label: l10n.pagesLibraryByTime,
+            isSelected: controller.tabMode.value == LibraryTabMode.byTime,
+            onTap: () => controller.switchTabMode(LibraryTabMode.byTime),
+          ),
+          _TabItem(
+            label: l10n.pagesLibraryByAlbum,
+            isSelected: controller.tabMode.value == LibraryTabMode.byAlbum,
+            onTap: () => controller.switchTabMode(LibraryTabMode.byAlbum),
+          ),
+        ],
       ),
     );
   }
@@ -131,7 +153,7 @@ class LibraryPage extends GetView<LibraryController> {
             ),
           ),
           TextButton(
-            onPressed: kIsWeb ? null : () => PhotoManager.openSetting(),
+            onPressed: kIsWeb ? null : PhotoManager.openSetting,
             child: Text(
               l10n.pagesLibraryGoSettings,
               style: const TextStyle(fontSize: 12),
@@ -163,7 +185,7 @@ class LibraryPage extends GetView<LibraryController> {
             const SizedBox(height: 24),
             AppButton(
               text: l10n.pagesLibraryGoSettings,
-              onPressed: kIsWeb ? null : () => PhotoManager.openSetting(),
+              onPressed: kIsWeb ? null : PhotoManager.openSetting,
             ),
           ],
         ),
@@ -200,7 +222,9 @@ class LibraryPage extends GetView<LibraryController> {
             const SizedBox(width: 8),
             AppButton(
               text: l10n.pagesLibraryCompress,
-              onPressed: () => _showPresetSheet(context, l10n),
+              onPressed: controller.selectedIds.isEmpty
+                  ? null
+                  : () => _showPresetSheet(context, l10n),
               size: AppButtonSize.small,
             ),
           ],
@@ -222,6 +246,199 @@ class LibraryPage extends GetView<LibraryController> {
     );
   }
 }
+
+// ─── Tab 指示器 ────────────────────────────────────────────────
+
+class _TabItem extends StatelessWidget {
+  const _TabItem({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: isSelected ? AppColors.primary : Colors.transparent,
+              width: 2,
+            ),
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? AppColors.primary : Colors.grey,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontSize: 14,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── 按时间视图 ──────────────────────────────────────────────
+
+class _ByTimeView extends GetView<LibraryController> {
+  const _ByTimeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.photos.isEmpty) return AppEmpty.noData();
+
+      final photos = controller.photos.toList();
+      final groups = _groupByYearMonth(photos);
+
+      return NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification is ScrollEndNotification &&
+              notification.metrics.extentAfter < 400) {
+            controller.loadMore();
+          }
+          return false;
+        },
+        child: CustomScrollView(
+          slivers: [
+            if (controller.estimatedSavings > 0)
+              SliverToBoxAdapter(child: _buildSavingsHeader(context)),
+            for (final entry in groups.entries) ...[
+              SliverToBoxAdapter(
+                child: _buildGroupHeader(
+                  context,
+                  entry.key,
+                  entry.value.length,
+                ),
+              ),
+              SliverGrid(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 2,
+                  mainAxisSpacing: 2,
+                ),
+                delegate: SliverChildBuilderDelegate((ctx, i) {
+                  final asset = entry.value[i];
+                  final globalIndex = photos.indexOf(asset);
+                  return Obx(
+                    () => PhotoGridCell(
+                      asset: asset,
+                      isSelected: controller.isSelected(asset.id),
+                      isSelectionMode: controller.isSelectionMode.value,
+                      isCompressed: controller.isCompressed(asset.id),
+                      onTap: () {
+                        if (controller.isSelectionMode.value) {
+                          controller.toggleSelection(asset.id);
+                        } else {
+                          controller.openViewer(globalIndex);
+                        }
+                      },
+                      onLongPress: () {
+                        if (!controller.isSelectionMode.value) {
+                          controller.enterSelectionMode(asset.id);
+                        }
+                      },
+                    ),
+                  );
+                }, childCount: entry.value.length),
+              ),
+            ],
+          ],
+        ),
+      );
+    });
+  }
+
+  Widget _buildSavingsHeader(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final savingsMB = (controller.estimatedSavings / (1024 * 1024))
+        .toStringAsFixed(1);
+    final l10n = context.l10n;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      color: AppColors.primary.withValues(alpha: 0.1),
+      child: Text(
+        l10n.pagesLibraryEstimatedSavings(savingsMB),
+        style: TextStyle(
+          color: isDark ? AppColors.primaryLight : AppColors.primaryDark,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGroupHeader(BuildContext context, String title, int count) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 16, 12, 6),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            '$count',
+            style: TextStyle(
+              fontSize: 13,
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 按年月分组，保持原有顺序
+  Map<String, List<PhotoAsset>> _groupByYearMonth(List<PhotoAsset> photos) {
+    final groups = <String, List<PhotoAsset>>{};
+    for (final photo in photos) {
+      final key = '${photo.createdAt.year}年${photo.createdAt.month}月';
+      (groups[key] ??= []).add(photo);
+    }
+    return groups;
+  }
+}
+
+// ─── 按相册视图 ──────────────────────────────────────────────
+
+class _ByAlbumView extends GetView<LibraryController> {
+  const _ByAlbumView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.isLoadingAlbums.value) return AppLoading.page();
+      if (controller.albums.isEmpty) return AppEmpty.noData();
+
+      return AlbumGridWidget(
+        albums: controller.albums.toList(),
+        onAlbumTap: (album) =>
+            AppRouter.push(AppRoutes.galleryAlbum, extra: album),
+      );
+    });
+  }
+}
+
+// ─── 压缩预设选择底部弹层 ────────────────────────────────────
 
 class _PresetPickerSheet extends StatelessWidget {
   const _PresetPickerSheet({required this.onSelected, required this.l10n});

@@ -1159,6 +1159,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This will delete the compressed AVIF file. Your original photo will remain unchanged.'**
   String get pagesCompareRollbackConfirm;
+
+  /// No description provided for @pagesLibraryByTime.
+  ///
+  /// In en, this message translates to:
+  /// **'By Time'**
+  String get pagesLibraryByTime;
+
+  /// No description provided for @pagesLibraryByAlbum.
+  ///
+  /// In en, this message translates to:
+  /// **'By Album'**
+  String get pagesLibraryByAlbum;
+
+  /// No description provided for @pagesLibrarySelect.
+  ///
+  /// In en, this message translates to:
+  /// **'Select'**
+  String get pagesLibrarySelect;
+
+  /// No description provided for @pagesLibraryPhotoCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Photos'**
+  String pagesLibraryPhotoCount(int count);
+
+  /// No description provided for @pagesGalleryShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get pagesGalleryShare;
+
+  /// No description provided for @pagesGalleryCompress.
+  ///
+  /// In en, this message translates to:
+  /// **'Compress'**
+  String get pagesGalleryCompress;
+
+  /// No description provided for @pagesGalleryCompare.
+  ///
+  /// In en, this message translates to:
+  /// **'Compare'**
+  String get pagesGalleryCompare;
+
+  /// No description provided for @pagesGalleryEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get pagesGalleryEdit;
+
+  /// No description provided for @pagesGalleryPhotoIndex.
+  ///
+  /// In en, this message translates to:
+  /// **'{current}/{total}'**
+  String pagesGalleryPhotoIndex(int current, int total);
+
+  /// No description provided for @pagesEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get pagesEditTitle;
+
+  /// No description provided for @pagesEditBrightness.
+  ///
+  /// In en, this message translates to:
+  /// **'Brightness'**
+  String get pagesEditBrightness;
+
+  /// No description provided for @pagesEditContrast.
+  ///
+  /// In en, this message translates to:
+  /// **'Contrast'**
+  String get pagesEditContrast;
+
+  /// No description provided for @pagesEditSaturation.
+  ///
+  /// In en, this message translates to:
+  /// **'Saturation'**
+  String get pagesEditSaturation;
+
+  /// No description provided for @pagesEditCrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Crop'**
+  String get pagesEditCrop;
+
+  /// No description provided for @pagesEditRotate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rotate'**
+  String get pagesEditRotate;
+
+  /// No description provided for @pagesEditReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get pagesEditReset;
+
+  /// No description provided for @pagesEditSaveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Options'**
+  String get pagesEditSaveTitle;
+
+  /// No description provided for @pagesEditSaveNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Save as New File'**
+  String get pagesEditSaveNew;
+
+  /// No description provided for @pagesEditSaveNewDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep original, save a new edited copy'**
+  String get pagesEditSaveNewDesc;
+
+  /// No description provided for @pagesEditOverwrite.
+  ///
+  /// In en, this message translates to:
+  /// **'Overwrite Original'**
+  String get pagesEditOverwrite;
+
+  /// No description provided for @pagesEditOverwriteDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Replace the original system photo with the edited version'**
+  String get pagesEditOverwriteDesc;
+
+  /// No description provided for @pagesEditCompressNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Compress Now'**
+  String get pagesEditCompressNow;
+
+  /// No description provided for @pagesEditSavedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get pagesEditSavedSuccess;
+
+  /// No description provided for @pagesEditSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Failed'**
+  String get pagesEditSaveFailed;
 }
 
 class _AppLocalizationsDelegate

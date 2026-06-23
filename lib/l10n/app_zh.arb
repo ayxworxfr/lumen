@@ -244,5 +244,41 @@
   "pagesCompareDeleteOriginalConfirm": "原图将从相册中永久删除，已压缩的 AVIF 文件会保留。此操作不可撤销，请谨慎操作。",
   "pagesCompareRollback": "回滚",
   "pagesCompareRollbackTitle": "删除压缩文件？",
-  "pagesCompareRollbackConfirm": "将删除对应的 AVIF 压缩文件，原图不受影响。"
+  "pagesCompareRollbackConfirm": "将删除对应的 AVIF 压缩文件，原图不受影响。",
+
+  "pagesLibraryByTime": "按时间",
+  "pagesLibraryByAlbum": "按相册",
+  "pagesLibrarySelect": "选择",
+  "pagesLibraryPhotoCount": "{count} 张照片",
+  "@pagesLibraryPhotoCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "pagesGalleryShare": "分享",
+  "pagesGalleryCompress": "压缩",
+  "pagesGalleryCompare": "对比",
+  "pagesGalleryEdit": "编辑",
+  "pagesGalleryPhotoIndex": "{current}/{total}",
+  "@pagesGalleryPhotoIndex": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "pagesEditTitle": "编辑",
+  "pagesEditBrightness": "亮度",
+  "pagesEditContrast": "对比度",
+  "pagesEditSaturation": "饱和度",
+  "pagesEditCrop": "裁剪",
+  "pagesEditRotate": "旋转",
+  "pagesEditReset": "重置",
+  "pagesEditSaveTitle": "保存方式",
+  "pagesEditSaveNew": "保存为新文件",
+  "pagesEditSaveNewDesc": "保留原图，另存一份编辑后的图片",
+  "pagesEditOverwrite": "覆盖原图",
+  "pagesEditOverwriteDesc": "将编辑后的图片替换原始系统照片",
+  "pagesEditCompressNow": "立即压缩",
+  "pagesEditSavedSuccess": "保存成功",
+  "pagesEditSaveFailed": "保存失败"
 }

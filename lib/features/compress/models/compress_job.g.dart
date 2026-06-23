@@ -12,11 +12,11 @@ _$CompressJobImpl _$$CompressJobImplFromJson(Map<String, dynamic> json) =>
       source: PhotoAsset.fromJson(json['source'] as Map<String, dynamic>),
       preset: $enumDecode(_$CompressPresetEnumMap, json['preset']),
       status: $enumDecode(_$JobStatusEnumMap, json['status']),
+      queuedAt: DateTime.parse(json['queuedAt'] as String),
       progress: (json['progress'] as num?)?.toDouble() ?? 0.0,
       outputBytes: (json['outputBytes'] as num?)?.toInt(),
       outputPath: json['outputPath'] as String?,
       errorMessage: json['errorMessage'] as String?,
-      queuedAt: DateTime.parse(json['queuedAt'] as String),
       finishedAt: json['finishedAt'] == null
           ? null
           : DateTime.parse(json['finishedAt'] as String),
@@ -28,11 +28,11 @@ Map<String, dynamic> _$$CompressJobImplToJson(_$CompressJobImpl instance) =>
       'source': instance.source,
       'preset': _$CompressPresetEnumMap[instance.preset]!,
       'status': _$JobStatusEnumMap[instance.status]!,
+      'queuedAt': instance.queuedAt.toIso8601String(),
       'progress': instance.progress,
       'outputBytes': instance.outputBytes,
       'outputPath': instance.outputPath,
       'errorMessage': instance.errorMessage,
-      'queuedAt': instance.queuedAt.toIso8601String(),
       'finishedAt': instance.finishedAt?.toIso8601String(),
     };
 

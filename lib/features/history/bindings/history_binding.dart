@@ -29,7 +29,10 @@ class HistoryBinding extends Bindings {
       () => HistoryController(historyService: Get.find<HistoryService>()),
     );
     Get.lazyPut<CompareController>(
-      () => CompareController(historyService: Get.find<HistoryService>()),
+      () => CompareController(
+        historyService: Get.find<HistoryService>(),
+        photoLibraryService: Get.find<PhotoLibraryService>(),
+      ),
     );
   }
 }

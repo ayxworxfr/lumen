@@ -2,8 +2,7 @@
 class FileStore {
   FileStore._();
 
-  static FileStore? _instance;
-  static FileStore get instance => _instance ??= FileStore._();
+  static final FileStore instance = FileStore._();
 
   Future<void> init() async {}
 

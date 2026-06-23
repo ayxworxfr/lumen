@@ -101,7 +101,7 @@ LibraryPage (select photos)
   → CompressService.enqueue(assets, preset)   [permanent GetX service]
   → CompressWorker.encode()                   [lazily creates platform encoder]
   → EncoderFactory.create()                  [iOS: MethodChannel → Swift ImageIO
-                                              Android MVP: file copy stub]
+                                              Android: MethodChannel → Kotlin → JNI → libavif]
   → FileStore.outputPathForId(jobId)         [<AppDocs>/compressed/<yyyyMM>/<id>.avif]
   → HistoryService.createFromJob(done)       [persists CompressedRecord to Hive]
 ```
@@ -117,6 +117,13 @@ LibraryPage (select photos)
 **Hive boxes** added for this feature: `compressedRecords` and `pendingJobs` (both `Box<dynamic>`, store JSON maps). Keys live in `StorageKeys`.
 
 **Cross-restart queue recovery**: on `CompressService.onInit()`, any `running` jobs stored in Hive are reset to `pending` and re-queued.
+
+**Android native build** (`android/app/src/main/cpp/`): The Android encoder uses CMake + NDK to compile `lumen_avif.so`. `CMakeLists.txt` uses `FetchContent` to download libavif v1.1.1 (which internally fetches libaom). Key cmake flags:
+- `AOM_TARGET_CPU="generic"` — prevents libaom from detecting arm64 and looking for `as` assembler (not in PATH on Windows)
+- `AVIF_CODEC_AOM="LOCAL"` — libavif v1.1.1 API for bundling libaom
+- `AVIF_LIBYUV="OFF"` — disables optional libyuv; libavif uses its own YUV routines
+
+**First build**: `make build-android` downloads ~80 MB of C source and compiles for ~30 minutes. Subsequent builds use Gradle's build cache and finish in seconds. If the build fails with cmake errors, run `flutter clean` first to clear the `.cxx` cache.
 
 ## Photo Library
 

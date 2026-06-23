@@ -1,7 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/codec/android/android_avif_encoder.dart'
+    if (dart.library.html) '../../../core/codec/web/web_avif_encoder_stub.dart';
 import '../../../core/platform/platform_file.dart' as pf;
 import '../../../core/theme/app_colors.dart';
+import '../../../core/widgets/app_loading.dart';
 
 /// 前后对比滑动控件
 ///
@@ -30,11 +34,20 @@ class BeforeAfterSlider extends StatefulWidget {
 
 class _BeforeAfterSliderState extends State<BeforeAfterSlider> {
   late double _position;
+  late final Future<Uint8List?> _compressedFuture;
 
   @override
   void initState() {
     super.initState();
     _position = widget.initialPosition;
+    _compressedFuture = _loadCompressed();
+  }
+
+  Future<Uint8List?> _loadCompressed() {
+    // Android 不支持原生 AVIF 解码（API < 31），通过 JNI dav1d 解码后转 JPEG
+    if (defaultTargetPlatform != TargetPlatform.android)
+      return Future<Uint8List?>.value();
+    return AndroidAvifEncoder.decode(widget.compressedPath, maxSide: 2048);
   }
 
   @override
@@ -52,8 +65,8 @@ class _BeforeAfterSliderState extends State<BeforeAfterSlider> {
           child: Stack(
             fit: StackFit.expand,
             children: [
-              // 右侧：压缩后
-              _buildImage(widget.compressedPath),
+              // 右侧：压缩后 AVIF（Android 异步解码，iOS 直接显示）
+              _buildCompressedImage(),
               // 左侧：原图（clip 到 position 以左）
               ClipRect(
                 clipper: _LeftClipper(_position),
@@ -76,19 +89,39 @@ class _BeforeAfterSliderState extends State<BeforeAfterSlider> {
     );
   }
 
-  Widget _buildImage(String path) => pf.buildFileImage(path, fit: BoxFit.cover);
+  Widget _buildCompressedImage() {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      // iOS：系统原生支持 AVIF，直接读文件
+      return pf.buildFileImage(widget.compressedPath);
+    }
+    // Android：通过 dav1d JNI 解码 AVIF → JPEG bytes
+    return FutureBuilder<Uint8List?>(
+      future: _compressedFuture,
+      builder: (_, snapshot) {
+        if (snapshot.hasData) {
+          return Image.memory(snapshot.data!, fit: BoxFit.cover);
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          return _imagePlaceholder();
+        }
+        return const AppLoading();
+      },
+    );
+  }
 
   Widget _buildOriginalImage() {
     if (widget.originalPath == null) {
-      return Container(
-        color: Colors.grey[400],
-        child: const Center(
-          child: Icon(Icons.image_not_supported, size: 48, color: Colors.grey),
-        ),
-      );
+      return _imagePlaceholder();
     }
-    return _buildImage(widget.originalPath!);
+    return pf.buildFileImage(widget.originalPath!);
   }
+
+  Widget _imagePlaceholder() => Container(
+    color: Colors.grey[400],
+    child: const Center(
+      child: Icon(Icons.image_not_supported, size: 48, color: Colors.grey),
+    ),
+  );
 
   Widget _buildDivider() {
     return Stack(

@@ -86,8 +86,8 @@ class PresetSheet extends GetView<CompressController> {
             Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
             if (isRecommended) ...[
               const SizedBox(width: 8),
-              Chip(
-                label: const Text(
+              const Chip(
+                label: Text(
                   'Recommended',
                   style: TextStyle(fontSize: 10, color: Colors.white),
                 ),

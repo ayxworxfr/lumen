@@ -12,25 +12,30 @@ class PhotoGridCell extends StatelessWidget {
     required this.asset,
     required this.isSelected,
     required this.isSelectionMode,
+    required this.isCompressed,
     required this.onTap,
+    required this.onLongPress,
     super.key,
   });
 
   final PhotoAsset asset;
   final bool isSelected;
   final bool isSelectionMode;
+  final bool isCompressed;
   final VoidCallback onTap;
+  final VoidCallback onLongPress;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
       child: Stack(
         fit: StackFit.expand,
         children: [
           _buildThumbnail(),
           if (isSelectionMode) _buildSelectionOverlay(),
-          _buildSizeBadge(),
+          _buildBadges(),
         ],
       ),
     );
@@ -110,21 +115,44 @@ class PhotoGridCell extends StatelessWidget {
     );
   }
 
-  Widget _buildSizeBadge() {
+  Widget _buildBadges() {
     return Align(
       alignment: Alignment.bottomLeft,
       child: Padding(
         padding: const EdgeInsets.all(4),
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-          decoration: BoxDecoration(
-            color: Colors.black54,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            asset.displaySize,
-            style: const TextStyle(color: Colors.white, fontSize: 10),
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Text(
+                asset.displaySize,
+                style: const TextStyle(color: Colors.white, fontSize: 10),
+              ),
+            ),
+            if (isCompressed) ...[
+              const SizedBox(width: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.85),
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Text(
+                  'AVIF',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
       ),
     );

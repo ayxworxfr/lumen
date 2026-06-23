@@ -17,7 +17,7 @@ import 'package:lumen/features/library/services/photo_library_service.dart';
 /// 可控编码器：设 errorToThrow 让 encode 抛异常，否则返回 successResult
 class FakeEncoder implements AvifEncoder {
   AvifEncodeResult? successResult;
-  Object? errorToThrow;
+  Exception? errorToThrow;
 
   @override
   bool get isSupported => true;
@@ -142,7 +142,7 @@ void main() {
       final history = FakeHistoryService();
       final encoder = FakeEncoder()
         ..successResult =
-            AvifEncodeResult(outputPath: '/out.avif', outputBytes: 500);
+            const AvifEncodeResult(outputPath: '/out.avif', outputBytes: 500);
       final service = Get.put(_buildService(history: history, encoder: encoder));
       await service.onInit();
 
@@ -159,7 +159,7 @@ void main() {
       final history = FakeHistoryService();
       final encoder = FakeEncoder()
         ..successResult =
-            AvifEncodeResult(outputPath: '/out.avif', outputBytes: 500);
+            const AvifEncodeResult(outputPath: '/out.avif', outputBytes: 500);
       final service = Get.put(_buildService(history: history, encoder: encoder));
       await service.onInit();
 
@@ -198,7 +198,7 @@ void main() {
       final history = FakeHistoryService();
       final encoder = FakeEncoder()
         ..successResult =
-            AvifEncodeResult(outputPath: '/out.avif', outputBytes: 500);
+            const AvifEncodeResult(outputPath: '/out.avif', outputBytes: 500);
       final service = Get.put(_buildService(history: history, encoder: encoder));
       await service.onInit();
 
@@ -244,17 +244,16 @@ void main() {
 
     test('F-3: 压缩无收益（输出 >= 原图）→ job.status = failed，errorMessage = no_savings',
         () async {
-      const sourceBytes = 1024 * 1024;
       final history = FakeHistoryService();
       final encoder = FakeEncoder()
-        ..successResult = AvifEncodeResult(
+        ..successResult = const AvifEncodeResult(
           outputPath: '/out.avif',
-          outputBytes: sourceBytes + 1, // 比原图大
+          outputBytes: 1024 * 1024 + 1,
         );
       final service = Get.put(_buildService(history: history, encoder: encoder));
       await service.onInit();
 
-      service.enqueue([_asset(byteSize: sourceBytes)], CompressPreset.balanced);
+      service.enqueue([_asset()], CompressPreset.balanced);
       await Future<void>.delayed(const Duration(milliseconds: 100));
 
       final job = service.jobs.first;
@@ -273,14 +272,14 @@ void main() {
       const compressedBytes = 400 * 1024;
       final history = FakeHistoryService();
       final encoder = FakeEncoder()
-        ..successResult = AvifEncodeResult(
+        ..successResult = const AvifEncodeResult(
           outputPath: '/output/test.avif',
           outputBytes: compressedBytes,
         );
       final service = Get.put(_buildService(history: history, encoder: encoder));
       await service.onInit();
 
-      service.enqueue([_asset(byteSize: sourceBytes)], CompressPreset.balanced);
+      service.enqueue([_asset()], CompressPreset.balanced);
       await Future<void>.delayed(const Duration(milliseconds: 100));
 
       final job = service.jobs.first;
@@ -298,12 +297,12 @@ void main() {
       final history = FakeHistoryService();
       final encoder = FakeEncoder()
         ..successResult =
-            AvifEncodeResult(outputPath: '/out.avif', outputBytes: compressed);
+            const AvifEncodeResult(outputPath: '/out.avif', outputBytes: compressed);
       final service = Get.put(_buildService(history: history, encoder: encoder));
       await service.onInit();
 
       service.enqueue([
-        _asset(id: 'a1', byteSize: bytes1),
+        _asset(id: 'a1'),
         _asset(id: 'a2', byteSize: bytes2),
       ], CompressPreset.balanced);
 
@@ -357,7 +356,7 @@ void main() {
       // 切换为成功，然后重试
       encoder
         ..errorToThrow = null
-        ..successResult = AvifEncodeResult(
+        ..successResult = const AvifEncodeResult(
           outputPath: '/out.avif',
           outputBytes: 400 * 1024,
         );

@@ -23,14 +23,14 @@ PhotoAsset _$PhotoAssetFromJson(Map<String, dynamic> json) {
 mixin _$PhotoAsset {
   /// photo_manager AssetEntity.id
   String get id => throw _privateConstructorUsedError;
-
-  /// App 沙盒内的临时缓存路径（按需获取，可为 null）
-  String? get path => throw _privateConstructorUsedError;
   int get byteSize => throw _privateConstructorUsedError;
   ImageFormat get format => throw _privateConstructorUsedError;
   int get width => throw _privateConstructorUsedError;
   int get height => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
+
+  /// App 沙盒内的临时缓存路径（按需获取，可为 null）
+  String? get path => throw _privateConstructorUsedError;
   String? get mimeType => throw _privateConstructorUsedError;
 
   /// Serializes this PhotoAsset to a JSON map.
@@ -52,12 +52,12 @@ abstract class $PhotoAssetCopyWith<$Res> {
   @useResult
   $Res call({
     String id,
-    String? path,
     int byteSize,
     ImageFormat format,
     int width,
     int height,
     DateTime createdAt,
+    String? path,
     String? mimeType,
   });
 }
@@ -78,12 +78,12 @@ class _$PhotoAssetCopyWithImpl<$Res, $Val extends PhotoAsset>
   @override
   $Res call({
     Object? id = null,
-    Object? path = freezed,
     Object? byteSize = null,
     Object? format = null,
     Object? width = null,
     Object? height = null,
     Object? createdAt = null,
+    Object? path = freezed,
     Object? mimeType = freezed,
   }) {
     return _then(
@@ -92,10 +92,6 @@ class _$PhotoAssetCopyWithImpl<$Res, $Val extends PhotoAsset>
                 ? _value.id
                 : id // ignore: cast_nullable_to_non_nullable
                       as String,
-            path: freezed == path
-                ? _value.path
-                : path // ignore: cast_nullable_to_non_nullable
-                      as String?,
             byteSize: null == byteSize
                 ? _value.byteSize
                 : byteSize // ignore: cast_nullable_to_non_nullable
@@ -116,6 +112,10 @@ class _$PhotoAssetCopyWithImpl<$Res, $Val extends PhotoAsset>
                 ? _value.createdAt
                 : createdAt // ignore: cast_nullable_to_non_nullable
                       as DateTime,
+            path: freezed == path
+                ? _value.path
+                : path // ignore: cast_nullable_to_non_nullable
+                      as String?,
             mimeType: freezed == mimeType
                 ? _value.mimeType
                 : mimeType // ignore: cast_nullable_to_non_nullable
@@ -137,12 +137,12 @@ abstract class _$$PhotoAssetImplCopyWith<$Res>
   @useResult
   $Res call({
     String id,
-    String? path,
     int byteSize,
     ImageFormat format,
     int width,
     int height,
     DateTime createdAt,
+    String? path,
     String? mimeType,
   });
 }
@@ -162,12 +162,12 @@ class __$$PhotoAssetImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? path = freezed,
     Object? byteSize = null,
     Object? format = null,
     Object? width = null,
     Object? height = null,
     Object? createdAt = null,
+    Object? path = freezed,
     Object? mimeType = freezed,
   }) {
     return _then(
@@ -176,10 +176,6 @@ class __$$PhotoAssetImplCopyWithImpl<$Res>
             ? _value.id
             : id // ignore: cast_nullable_to_non_nullable
                   as String,
-        path: freezed == path
-            ? _value.path
-            : path // ignore: cast_nullable_to_non_nullable
-                  as String?,
         byteSize: null == byteSize
             ? _value.byteSize
             : byteSize // ignore: cast_nullable_to_non_nullable
@@ -200,6 +196,10 @@ class __$$PhotoAssetImplCopyWithImpl<$Res>
             ? _value.createdAt
             : createdAt // ignore: cast_nullable_to_non_nullable
                   as DateTime,
+        path: freezed == path
+            ? _value.path
+            : path // ignore: cast_nullable_to_non_nullable
+                  as String?,
         mimeType: freezed == mimeType
             ? _value.mimeType
             : mimeType // ignore: cast_nullable_to_non_nullable
@@ -214,12 +214,12 @@ class __$$PhotoAssetImplCopyWithImpl<$Res>
 class _$PhotoAssetImpl extends _PhotoAsset {
   const _$PhotoAssetImpl({
     required this.id,
-    this.path,
     required this.byteSize,
     required this.format,
     required this.width,
     required this.height,
     required this.createdAt,
+    this.path,
     this.mimeType,
   }) : super._();
 
@@ -229,10 +229,6 @@ class _$PhotoAssetImpl extends _PhotoAsset {
   /// photo_manager AssetEntity.id
   @override
   final String id;
-
-  /// App 沙盒内的临时缓存路径（按需获取，可为 null）
-  @override
-  final String? path;
   @override
   final int byteSize;
   @override
@@ -243,12 +239,16 @@ class _$PhotoAssetImpl extends _PhotoAsset {
   final int height;
   @override
   final DateTime createdAt;
+
+  /// App 沙盒内的临时缓存路径（按需获取，可为 null）
+  @override
+  final String? path;
   @override
   final String? mimeType;
 
   @override
   String toString() {
-    return 'PhotoAsset(id: $id, path: $path, byteSize: $byteSize, format: $format, width: $width, height: $height, createdAt: $createdAt, mimeType: $mimeType)';
+    return 'PhotoAsset(id: $id, byteSize: $byteSize, format: $format, width: $width, height: $height, createdAt: $createdAt, path: $path, mimeType: $mimeType)';
   }
 
   @override
@@ -257,7 +257,6 @@ class _$PhotoAssetImpl extends _PhotoAsset {
         (other.runtimeType == runtimeType &&
             other is _$PhotoAssetImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.path, path) || other.path == path) &&
             (identical(other.byteSize, byteSize) ||
                 other.byteSize == byteSize) &&
             (identical(other.format, format) || other.format == format) &&
@@ -265,6 +264,7 @@ class _$PhotoAssetImpl extends _PhotoAsset {
             (identical(other.height, height) || other.height == height) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            (identical(other.path, path) || other.path == path) &&
             (identical(other.mimeType, mimeType) ||
                 other.mimeType == mimeType));
   }
@@ -274,12 +274,12 @@ class _$PhotoAssetImpl extends _PhotoAsset {
   int get hashCode => Object.hash(
     runtimeType,
     id,
-    path,
     byteSize,
     format,
     width,
     height,
     createdAt,
+    path,
     mimeType,
   );
 
@@ -300,12 +300,12 @@ class _$PhotoAssetImpl extends _PhotoAsset {
 abstract class _PhotoAsset extends PhotoAsset {
   const factory _PhotoAsset({
     required final String id,
-    final String? path,
     required final int byteSize,
     required final ImageFormat format,
     required final int width,
     required final int height,
     required final DateTime createdAt,
+    final String? path,
     final String? mimeType,
   }) = _$PhotoAssetImpl;
   const _PhotoAsset._() : super._();
@@ -316,10 +316,6 @@ abstract class _PhotoAsset extends PhotoAsset {
   /// photo_manager AssetEntity.id
   @override
   String get id;
-
-  /// App 沙盒内的临时缓存路径（按需获取，可为 null）
-  @override
-  String? get path;
   @override
   int get byteSize;
   @override
@@ -330,6 +326,10 @@ abstract class _PhotoAsset extends PhotoAsset {
   int get height;
   @override
   DateTime get createdAt;
+
+  /// App 沙盒内的临时缓存路径（按需获取，可为 null）
+  @override
+  String? get path;
   @override
   String? get mimeType;
 

@@ -4,8 +4,8 @@ import '../../../core/storage/file_store.dart';
 import '../../../core/utils/logger_util.dart';
 import '../../compress/models/compress_job.dart';
 import '../../library/services/photo_library_service.dart';
-import 'compressed_record_repo.dart';
 import '../models/compressed_record.dart';
+import 'compressed_record_repo.dart';
 
 /// 历史记录服务
 ///

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../../core/utils/logger_util.dart';
+import '../models/album_info.dart';
 import '../models/photo_asset.dart';
 
 /// 系统相册访问服务
@@ -32,10 +33,7 @@ class PhotoLibraryService extends GetxService {
     int pageSize = 80,
     int filterMinBytes = 0,
   }) async {
-    final albums = await PhotoManager.getAssetPathList(
-      type: RequestType.image,
-      hasAll: true,
-    );
+    final albums = await PhotoManager.getAssetPathList(type: RequestType.image);
 
     if (albums.isEmpty) return [];
 
@@ -46,12 +44,84 @@ class PhotoLibraryService extends GetxService {
       size: pageSize,
     );
 
+    return _entitiesToAssets(entities, filterMinBytes: filterMinBytes);
+  }
+
+  /// 获取指定系统相册的图片（分页）
+  Future<List<PhotoAsset>> getAlbumPhotos({
+    required String albumId,
+    int page = 0,
+    int pageSize = 80,
+  }) async {
+    final albums = await PhotoManager.getAssetPathList(type: RequestType.image);
+    AssetPathEntity? album;
+    try {
+      album = albums.firstWhere((p) => p.id == albumId);
+    } catch (_) {
+      if (albums.isEmpty) return [];
+      album = albums.first;
+    }
+
+    final entities = await album.getAssetListPaged(page: page, size: pageSize);
+    return _entitiesToAssets(entities);
+  }
+
+  /// 获取系统相册列表（排除空相册）
+  Future<List<AlbumInfo>> getAlbums() async {
+    final paths = await PhotoManager.getAssetPathList(type: RequestType.image);
+    final albums = <AlbumInfo>[];
+
+    for (final path in paths) {
+      final count = await path.assetCountAsync;
+      if (count == 0) continue;
+
+      final covers = await path.getAssetListRange(start: 0, end: 1);
+      albums.add(
+        AlbumInfo(
+          albumId: path.id,
+          name: path.name,
+          count: count,
+          coverAssetId: covers.isNotEmpty ? covers.first.id : null,
+        ),
+      );
+    }
+
+    return albums;
+  }
+
+  /// 获取相册总图片数量
+  Future<int> getTotalPhotoCount() async {
+    final albums = await PhotoManager.getAssetPathList(type: RequestType.image);
+    if (albums.isEmpty) return 0;
+    return albums.first.assetCountAsync;
+  }
+
+  /// 通过 AssetEntity ID 获取文件路径（用于传给编码器）
+  Future<String?> getFilePath(String assetId) async {
+    final entity = await AssetEntity.fromId(assetId);
+    if (entity == null) return null;
+    final file = await entity.file;
+    return file?.path;
+  }
+
+  /// 删除原图（需要系统弹窗确认）
+  ///
+  /// 返回成功删除的 ID 列表。
+  Future<List<String>> deleteAssets(List<String> assetIds) async {
+    final result = await PhotoManager.editor.deleteWithIds(assetIds);
+    return result;
+  }
+
+  /// 将 entity 列表转为 PhotoAsset 列表
+  Future<List<PhotoAsset>> _entitiesToAssets(
+    List<AssetEntity> entities, {
+    int filterMinBytes = 0,
+  }) async {
     final assets = <PhotoAsset>[];
     for (final entity in entities) {
-      final byteSize = entity.width * entity.height * 3; // 估算，不精确
+      final byteSize = entity.width * entity.height * 3;
 
-      // 精确文件大小
-      int fileSize = 0;
+      var fileSize = 0;
       try {
         final file = await entity.file;
         if (file != null) {
@@ -79,33 +149,6 @@ class PhotoLibraryService extends GetxService {
         ),
       );
     }
-
     return assets;
-  }
-
-  /// 获取相册总图片数量
-  Future<int> getTotalPhotoCount() async {
-    final albums = await PhotoManager.getAssetPathList(
-      type: RequestType.image,
-      hasAll: true,
-    );
-    if (albums.isEmpty) return 0;
-    return albums.first.assetCountAsync;
-  }
-
-  /// 通过 AssetEntity ID 获取文件路径（用于传给编码器）
-  Future<String?> getFilePath(String assetId) async {
-    final entity = await AssetEntity.fromId(assetId);
-    if (entity == null) return null;
-    final file = await entity.file;
-    return file?.path;
-  }
-
-  /// 删除原图（需要系统弹窗确认）
-  ///
-  /// 返回成功删除的 ID 列表。
-  Future<List<String>> deleteAssets(List<String> assetIds) async {
-    final result = await PhotoManager.editor.deleteWithIds(assetIds);
-    return result;
   }
 }

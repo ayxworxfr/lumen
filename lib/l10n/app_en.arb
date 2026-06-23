@@ -244,5 +244,41 @@
   "pagesCompareDeleteOriginalConfirm": "This will permanently delete the original from your photo library. The compressed AVIF file will remain. This action cannot be undone.",
   "pagesCompareRollback": "Roll Back",
   "pagesCompareRollbackTitle": "Remove Compressed File?",
-  "pagesCompareRollbackConfirm": "This will delete the compressed AVIF file. Your original photo will remain unchanged."
+  "pagesCompareRollbackConfirm": "This will delete the compressed AVIF file. Your original photo will remain unchanged.",
+
+  "pagesLibraryByTime": "By Time",
+  "pagesLibraryByAlbum": "By Album",
+  "pagesLibrarySelect": "Select",
+  "pagesLibraryPhotoCount": "{count} Photos",
+  "@pagesLibraryPhotoCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "pagesGalleryShare": "Share",
+  "pagesGalleryCompress": "Compress",
+  "pagesGalleryCompare": "Compare",
+  "pagesGalleryEdit": "Edit",
+  "pagesGalleryPhotoIndex": "{current}/{total}",
+  "@pagesGalleryPhotoIndex": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+
+  "pagesEditTitle": "Edit",
+  "pagesEditBrightness": "Brightness",
+  "pagesEditContrast": "Contrast",
+  "pagesEditSaturation": "Saturation",
+  "pagesEditCrop": "Crop",
+  "pagesEditRotate": "Rotate",
+  "pagesEditReset": "Reset",
+  "pagesEditSaveTitle": "Save Options",
+  "pagesEditSaveNew": "Save as New File",
+  "pagesEditSaveNewDesc": "Keep original, save a new edited copy",
+  "pagesEditOverwrite": "Overwrite Original",
+  "pagesEditOverwriteDesc": "Replace the original system photo with the edited version",
+  "pagesEditCompressNow": "Compress Now",
+  "pagesEditSavedSuccess": "Saved",
+  "pagesEditSaveFailed": "Save Failed"
 }

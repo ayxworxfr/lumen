@@ -61,11 +61,11 @@ class CompressJob with _$CompressJob {
     required PhotoAsset source,
     required CompressPreset preset,
     required JobStatus status,
+    required DateTime queuedAt,
     @Default(0.0) double progress,
     int? outputBytes,
     String? outputPath,
     String? errorMessage,
-    required DateTime queuedAt,
     DateTime? finishedAt,
   }) = _CompressJob;
   const CompressJob._();

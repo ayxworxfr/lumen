@@ -559,4 +559,80 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pagesCompareRollbackConfirm => '将删除对应的 AVIF 压缩文件，原图不受影响。';
+
+  @override
+  String get pagesLibraryByTime => '按时间';
+
+  @override
+  String get pagesLibraryByAlbum => '按相册';
+
+  @override
+  String get pagesLibrarySelect => '选择';
+
+  @override
+  String pagesLibraryPhotoCount(int count) {
+    return '$count 张照片';
+  }
+
+  @override
+  String get pagesGalleryShare => '分享';
+
+  @override
+  String get pagesGalleryCompress => '压缩';
+
+  @override
+  String get pagesGalleryCompare => '对比';
+
+  @override
+  String get pagesGalleryEdit => '编辑';
+
+  @override
+  String pagesGalleryPhotoIndex(int current, int total) {
+    return '$current/$total';
+  }
+
+  @override
+  String get pagesEditTitle => '编辑';
+
+  @override
+  String get pagesEditBrightness => '亮度';
+
+  @override
+  String get pagesEditContrast => '对比度';
+
+  @override
+  String get pagesEditSaturation => '饱和度';
+
+  @override
+  String get pagesEditCrop => '裁剪';
+
+  @override
+  String get pagesEditRotate => '旋转';
+
+  @override
+  String get pagesEditReset => '重置';
+
+  @override
+  String get pagesEditSaveTitle => '保存方式';
+
+  @override
+  String get pagesEditSaveNew => '保存为新文件';
+
+  @override
+  String get pagesEditSaveNewDesc => '保留原图，另存一份编辑后的图片';
+
+  @override
+  String get pagesEditOverwrite => '覆盖原图';
+
+  @override
+  String get pagesEditOverwriteDesc => '将编辑后的图片替换原始系统照片';
+
+  @override
+  String get pagesEditCompressNow => '立即压缩';
+
+  @override
+  String get pagesEditSavedSuccess => '保存成功';
+
+  @override
+  String get pagesEditSaveFailed => '保存失败';
 }

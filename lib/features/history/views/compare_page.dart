@@ -29,7 +29,9 @@ class _ComparePageState extends State<ComparePage> {
     super.initState();
     _compareCtrl = Get.find<CompareController>();
     _historyCtrl = Get.find<HistoryController>();
-    _compareCtrl.loadRecord(widget.recordId);
+    _compareCtrl.loadRecord(
+      widget.recordId,
+    ); // async — originalPath updates via Rxn
   }
 
   @override
@@ -52,7 +54,7 @@ class _ComparePageState extends State<ComparePage> {
           children: [
             Expanded(
               child: BeforeAfterSlider(
-                originalPath: null, // 原图通过 photo_manager 异步获取
+                originalPath: _compareCtrl.originalPath.value,
                 compressedPath: record.outputPath,
               ),
             ),

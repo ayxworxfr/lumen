@@ -11,8 +11,9 @@ class EncoderFactory {
 
   static AvifEncoder create() {
     if (kIsWeb) throw UnsupportedError('AVIF encoding is not supported on web');
-    if (defaultTargetPlatform == TargetPlatform.iOS)
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
       return const IosAvifEncoder();
+    }
     if (defaultTargetPlatform == TargetPlatform.android) {
       return const AndroidAvifEncoder();
     }

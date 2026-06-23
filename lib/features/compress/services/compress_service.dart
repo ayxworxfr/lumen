@@ -8,9 +8,9 @@ import '../../../core/isolate/compress_worker.dart';
 import '../../../core/storage/file_store.dart';
 import '../../../core/storage/hive_boxes.dart';
 import '../../../core/utils/logger_util.dart';
+import '../../history/services/history_service.dart';
 import '../../library/models/photo_asset.dart';
 import '../../library/services/photo_library_service.dart';
-import '../../history/services/history_service.dart';
 import '../models/compress_job.dart';
 
 /// 压缩队列服务
@@ -160,8 +160,7 @@ class CompressService extends GetxService {
     // 已被取消则跳过
     final current = _findJob(job.id);
     if (current == null || current.status == JobStatus.canceled) {
-      _processNext();
-      return;
+      return _processNext();
     }
 
     _updateJob(job.id, (j) => j.copyWith(status: JobStatus.running));
@@ -202,7 +201,7 @@ class CompressService extends GetxService {
             status: JobStatus.done,
             outputPath: result.outputPath,
             outputBytes: result.outputBytes,
-            progress: 1.0,
+            progress: 1,
             finishedAt: DateTime.now(),
           ),
         );
@@ -223,11 +222,11 @@ class CompressService extends GetxService {
       );
     } finally {
       try {
-        HiveBoxes.pendingJobsBox.delete(job.id);
+        await HiveBoxes.pendingJobsBox.delete(job.id);
       } catch (_) {}
     }
 
-    _processNext();
+    return _processNext();
   }
 
   Future<String?> _getSourcePath(CompressJob job) async {

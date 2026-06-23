@@ -6,11 +6,16 @@ import '../../../app/router/app_router.dart';
 import '../../../core/utils/logger_util.dart';
 import '../../compress/models/compress_job.dart';
 import '../../compress/services/compress_service.dart';
+import '../../history/services/compressed_record_repo.dart';
+import '../models/album_info.dart';
 import '../models/photo_asset.dart';
 import '../services/photo_library_service.dart';
 
 /// 相册排序方式
 enum LibrarySortOrder { bySize, byDate }
+
+/// 相册浏览模式（Tab 切换）
+enum LibraryTabMode { byTime, byAlbum }
 
 /// 相册浏览控制器
 class LibraryController extends GetxController {
@@ -26,8 +31,17 @@ class LibraryController extends GetxController {
   final hasPermission = false.obs;
   final isLimitedAccess = false.obs;
   final selectedIds = <String>{}.obs;
+  final isSelectionMode = false.obs;
   final sortOrder = LibrarySortOrder.bySize.obs;
   final errorMessage = Rxn<String>();
+
+  // 相册模式
+  final tabMode = LibraryTabMode.byTime.obs;
+  final albums = <AlbumInfo>[].obs;
+  final isLoadingAlbums = false.obs;
+
+  // 已压缩资源 ID 集合（用于网格 AVIF 徽章）
+  final compressedAssetIds = <String>{}.obs;
 
   // 分页
   int _page = 0;
@@ -46,6 +60,8 @@ class LibraryController extends GetxController {
       photos.where((p) => selectedIds.contains(p.id)).toList();
 
   bool isSelected(String id) => selectedIds.contains(id);
+
+  bool isCompressed(String id) => compressedAssetIds.contains(id);
 
   @override
   void onInit() {
@@ -70,7 +86,7 @@ class LibraryController extends GetxController {
           return;
         }
       }
-      await loadPhotos();
+      await Future.wait([loadPhotos(), loadCompressedIds()]);
     } on MissingPluginException {
       // photo_manager has no web implementation — treat as no permission
     } catch (e) {
@@ -85,10 +101,7 @@ class LibraryController extends GetxController {
   Future<void> loadPhotos() async {
     _page = 0;
     hasMore.value = true;
-    final list = await _libraryService.getPhotos(
-      page: _page,
-      pageSize: _pageSize,
-    );
+    final list = await _libraryService.getPhotos(page: _page);
     photos.value = _sortedPhotos(list);
     hasMore.value = list.length == _pageSize;
     _page++;
@@ -99,15 +112,43 @@ class LibraryController extends GetxController {
     if (!hasMore.value || isLoadingMore.value) return;
     isLoadingMore.value = true;
     try {
-      final list = await _libraryService.getPhotos(
-        page: _page,
-        pageSize: _pageSize,
-      );
+      final list = await _libraryService.getPhotos(page: _page);
       photos.addAll(_sortedPhotos(list));
       hasMore.value = list.length == _pageSize;
       _page++;
     } finally {
       isLoadingMore.value = false;
+    }
+  }
+
+  /// 加载系统相册列表
+  Future<void> loadAlbums() async {
+    if (isLoadingAlbums.value) return;
+    isLoadingAlbums.value = true;
+    try {
+      albums.value = await _libraryService.getAlbums();
+    } catch (e) {
+      LoggerUtil.e('Load albums failed', e);
+    } finally {
+      isLoadingAlbums.value = false;
+    }
+  }
+
+  /// 刷新已压缩资源 ID 集合
+  Future<void> loadCompressedIds() async {
+    try {
+      final repo = Get.find<CompressedRecordRepo>();
+      final records = repo.loadAll();
+      compressedAssetIds.assignAll(records.map((r) => r.sourceAssetId).toSet());
+    } catch (_) {
+      // CompressedRecordRepo 未注册时（如 web 或测试），静默忽略
+    }
+  }
+
+  void switchTabMode(LibraryTabMode mode) {
+    tabMode.value = mode;
+    if (mode == LibraryTabMode.byAlbum && albums.isEmpty) {
+      loadAlbums();
     }
   }
 
@@ -126,7 +167,17 @@ class LibraryController extends GetxController {
     photos.value = _sortedPhotos(photos);
   }
 
-  // ─── 多选 ─────────────────────────────────────────────────
+  // ─── 选择模式 ─────────────────────────────────────────────
+
+  void enterSelectionMode([String? firstSelectedId]) {
+    isSelectionMode.value = true;
+    if (firstSelectedId != null) selectedIds.add(firstSelectedId);
+  }
+
+  void exitSelectionMode() {
+    isSelectionMode.value = false;
+    selectedIds.clear();
+  }
 
   void toggleSelection(String id) {
     if (selectedIds.contains(id)) {
@@ -144,13 +195,31 @@ class LibraryController extends GetxController {
     selectedIds.clear();
   }
 
+  // ─── 查看器 ───────────────────────────────────────────────
+
+  /// 打开全屏查看器，[index] 为图片在 photos 列表中的下标
+  void openViewer(int index) {
+    AppRouter.push(
+      AppRoutes.galleryViewer,
+      extra: GalleryViewerArgs(photos: photos.toList(), initialIndex: index),
+    );
+  }
+
   // ─── 压缩 ─────────────────────────────────────────────────
 
   /// 使用指定预设入队，并跳转进度页
   void enqueueWithPreset(CompressPreset preset) {
     final compressService = Get.find<CompressService>();
     compressService.enqueue(selectedAssets, preset);
-    clearSelection();
+    exitSelectionMode();
     AppRouter.go(AppRoutes.compressProgress);
   }
+}
+
+/// 查看器路由参数
+class GalleryViewerArgs {
+  const GalleryViewerArgs({required this.photos, required this.initialIndex});
+
+  final List<PhotoAsset> photos;
+  final int initialIndex;
 }

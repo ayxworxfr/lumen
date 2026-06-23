@@ -25,11 +25,11 @@ mixin _$CompressJob {
   PhotoAsset get source => throw _privateConstructorUsedError;
   CompressPreset get preset => throw _privateConstructorUsedError;
   JobStatus get status => throw _privateConstructorUsedError;
+  DateTime get queuedAt => throw _privateConstructorUsedError;
   double get progress => throw _privateConstructorUsedError;
   int? get outputBytes => throw _privateConstructorUsedError;
   String? get outputPath => throw _privateConstructorUsedError;
   String? get errorMessage => throw _privateConstructorUsedError;
-  DateTime get queuedAt => throw _privateConstructorUsedError;
   DateTime? get finishedAt => throw _privateConstructorUsedError;
 
   /// Serializes this CompressJob to a JSON map.
@@ -54,11 +54,11 @@ abstract class $CompressJobCopyWith<$Res> {
     PhotoAsset source,
     CompressPreset preset,
     JobStatus status,
+    DateTime queuedAt,
     double progress,
     int? outputBytes,
     String? outputPath,
     String? errorMessage,
-    DateTime queuedAt,
     DateTime? finishedAt,
   });
 
@@ -84,11 +84,11 @@ class _$CompressJobCopyWithImpl<$Res, $Val extends CompressJob>
     Object? source = null,
     Object? preset = null,
     Object? status = null,
+    Object? queuedAt = null,
     Object? progress = null,
     Object? outputBytes = freezed,
     Object? outputPath = freezed,
     Object? errorMessage = freezed,
-    Object? queuedAt = null,
     Object? finishedAt = freezed,
   }) {
     return _then(
@@ -109,6 +109,10 @@ class _$CompressJobCopyWithImpl<$Res, $Val extends CompressJob>
                 ? _value.status
                 : status // ignore: cast_nullable_to_non_nullable
                       as JobStatus,
+            queuedAt: null == queuedAt
+                ? _value.queuedAt
+                : queuedAt // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
             progress: null == progress
                 ? _value.progress
                 : progress // ignore: cast_nullable_to_non_nullable
@@ -125,10 +129,6 @@ class _$CompressJobCopyWithImpl<$Res, $Val extends CompressJob>
                 ? _value.errorMessage
                 : errorMessage // ignore: cast_nullable_to_non_nullable
                       as String?,
-            queuedAt: null == queuedAt
-                ? _value.queuedAt
-                : queuedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
             finishedAt: freezed == finishedAt
                 ? _value.finishedAt
                 : finishedAt // ignore: cast_nullable_to_non_nullable
@@ -163,11 +163,11 @@ abstract class _$$CompressJobImplCopyWith<$Res>
     PhotoAsset source,
     CompressPreset preset,
     JobStatus status,
+    DateTime queuedAt,
     double progress,
     int? outputBytes,
     String? outputPath,
     String? errorMessage,
-    DateTime queuedAt,
     DateTime? finishedAt,
   });
 
@@ -193,11 +193,11 @@ class __$$CompressJobImplCopyWithImpl<$Res>
     Object? source = null,
     Object? preset = null,
     Object? status = null,
+    Object? queuedAt = null,
     Object? progress = null,
     Object? outputBytes = freezed,
     Object? outputPath = freezed,
     Object? errorMessage = freezed,
-    Object? queuedAt = null,
     Object? finishedAt = freezed,
   }) {
     return _then(
@@ -218,6 +218,10 @@ class __$$CompressJobImplCopyWithImpl<$Res>
             ? _value.status
             : status // ignore: cast_nullable_to_non_nullable
                   as JobStatus,
+        queuedAt: null == queuedAt
+            ? _value.queuedAt
+            : queuedAt // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
         progress: null == progress
             ? _value.progress
             : progress // ignore: cast_nullable_to_non_nullable
@@ -234,10 +238,6 @@ class __$$CompressJobImplCopyWithImpl<$Res>
             ? _value.errorMessage
             : errorMessage // ignore: cast_nullable_to_non_nullable
                   as String?,
-        queuedAt: null == queuedAt
-            ? _value.queuedAt
-            : queuedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
         finishedAt: freezed == finishedAt
             ? _value.finishedAt
             : finishedAt // ignore: cast_nullable_to_non_nullable
@@ -255,11 +255,11 @@ class _$CompressJobImpl extends _CompressJob {
     required this.source,
     required this.preset,
     required this.status,
+    required this.queuedAt,
     this.progress = 0.0,
     this.outputBytes,
     this.outputPath,
     this.errorMessage,
-    required this.queuedAt,
     this.finishedAt,
   }) : super._();
 
@@ -275,6 +275,8 @@ class _$CompressJobImpl extends _CompressJob {
   @override
   final JobStatus status;
   @override
+  final DateTime queuedAt;
+  @override
   @JsonKey()
   final double progress;
   @override
@@ -284,13 +286,11 @@ class _$CompressJobImpl extends _CompressJob {
   @override
   final String? errorMessage;
   @override
-  final DateTime queuedAt;
-  @override
   final DateTime? finishedAt;
 
   @override
   String toString() {
-    return 'CompressJob(id: $id, source: $source, preset: $preset, status: $status, progress: $progress, outputBytes: $outputBytes, outputPath: $outputPath, errorMessage: $errorMessage, queuedAt: $queuedAt, finishedAt: $finishedAt)';
+    return 'CompressJob(id: $id, source: $source, preset: $preset, status: $status, queuedAt: $queuedAt, progress: $progress, outputBytes: $outputBytes, outputPath: $outputPath, errorMessage: $errorMessage, finishedAt: $finishedAt)';
   }
 
   @override
@@ -302,6 +302,8 @@ class _$CompressJobImpl extends _CompressJob {
             (identical(other.source, source) || other.source == source) &&
             (identical(other.preset, preset) || other.preset == preset) &&
             (identical(other.status, status) || other.status == status) &&
+            (identical(other.queuedAt, queuedAt) ||
+                other.queuedAt == queuedAt) &&
             (identical(other.progress, progress) ||
                 other.progress == progress) &&
             (identical(other.outputBytes, outputBytes) ||
@@ -310,8 +312,6 @@ class _$CompressJobImpl extends _CompressJob {
                 other.outputPath == outputPath) &&
             (identical(other.errorMessage, errorMessage) ||
                 other.errorMessage == errorMessage) &&
-            (identical(other.queuedAt, queuedAt) ||
-                other.queuedAt == queuedAt) &&
             (identical(other.finishedAt, finishedAt) ||
                 other.finishedAt == finishedAt));
   }
@@ -324,11 +324,11 @@ class _$CompressJobImpl extends _CompressJob {
     source,
     preset,
     status,
+    queuedAt,
     progress,
     outputBytes,
     outputPath,
     errorMessage,
-    queuedAt,
     finishedAt,
   );
 
@@ -352,11 +352,11 @@ abstract class _CompressJob extends CompressJob {
     required final PhotoAsset source,
     required final CompressPreset preset,
     required final JobStatus status,
+    required final DateTime queuedAt,
     final double progress,
     final int? outputBytes,
     final String? outputPath,
     final String? errorMessage,
-    required final DateTime queuedAt,
     final DateTime? finishedAt,
   }) = _$CompressJobImpl;
   const _CompressJob._() : super._();
@@ -373,6 +373,8 @@ abstract class _CompressJob extends CompressJob {
   @override
   JobStatus get status;
   @override
+  DateTime get queuedAt;
+  @override
   double get progress;
   @override
   int? get outputBytes;
@@ -380,8 +382,6 @@ abstract class _CompressJob extends CompressJob {
   String? get outputPath;
   @override
   String? get errorMessage;
-  @override
-  DateTime get queuedAt;
   @override
   DateTime? get finishedAt;
 

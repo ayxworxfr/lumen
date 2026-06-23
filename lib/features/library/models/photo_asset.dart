@@ -43,14 +43,14 @@ class PhotoAsset with _$PhotoAsset {
   const factory PhotoAsset({
     /// photo_manager AssetEntity.id
     required String id,
-
-    /// App 沙盒内的临时缓存路径（按需获取，可为 null）
-    String? path,
     required int byteSize,
     required ImageFormat format,
     required int width,
     required int height,
     required DateTime createdAt,
+
+    /// App 沙盒内的临时缓存路径（按需获取，可为 null）
+    String? path,
     String? mimeType,
   }) = _PhotoAsset;
   const PhotoAsset._();

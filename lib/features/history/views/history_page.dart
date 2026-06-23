@@ -1,12 +1,14 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 import '../../../app/router/app_router.dart';
 import '../../../core/l10n/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_empty.dart';
 import '../../../core/widgets/app_loading.dart';
-import '../../../core/platform/platform_file.dart' as pf;
 import '../../../l10n/generated/app_localizations.dart';
 import '../../compress/services/savings_estimator.dart';
 import '../controllers/history_controller.dart';
@@ -161,5 +163,57 @@ class HistoryPage extends GetView<HistoryController> {
   }
 
   Widget _buildAvifPreview(CompressedRecord record) =>
-      pf.buildFileImage(record.outputPath, fit: BoxFit.cover);
+      _RecordThumbnail(record: record);
+}
+
+// ─── 原图缩略图（替代直接显示 AVIF，Android < API 31 不支持 AVIF 解码）────
+
+class _RecordThumbnail extends StatefulWidget {
+  const _RecordThumbnail({required this.record});
+
+  final CompressedRecord record;
+
+  @override
+  State<_RecordThumbnail> createState() => _RecordThumbnailState();
+}
+
+class _RecordThumbnailState extends State<_RecordThumbnail> {
+  late final Future<Uint8List?> _future = _loadThumbnail();
+
+  Future<Uint8List?> _loadThumbnail() async {
+    final entity = await AssetEntity.fromId(widget.record.sourceAssetId);
+    return entity?.thumbnailDataWithSize(const ThumbnailSize(400, 400));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Uint8List?>(
+      future: _future,
+      builder: (_, snapshot) {
+        if (snapshot.hasData) {
+          return Image.memory(
+            snapshot.data!,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => const _ThumbnailPlaceholder(),
+          );
+        }
+        if (snapshot.connectionState == ConnectionState.done) {
+          return const _ThumbnailPlaceholder();
+        }
+        return const AppLoading();
+      },
+    );
+  }
+}
+
+class _ThumbnailPlaceholder extends StatelessWidget {
+  const _ThumbnailPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: Colors.grey.shade200,
+      child: const Icon(Icons.image_outlined, size: 48, color: Colors.grey),
+    );
+  }
 }

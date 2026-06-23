@@ -4,13 +4,12 @@ import 'package:path_provider/path_provider.dart';
 
 /// App 沙盒文件管理
 ///
-/// 压缩输出路径格式：<AppDocs>/compressed/<yyyyMM>/<id>.avif
+/// 压缩输出路径格式：AppDocs/compressed/yyyyMM/id.avif
 /// 排除 iCloud 备份（通过 URLResourceKey.isExcludedFromBackup 在 iOS 设置）。
 class FileStore {
   FileStore._();
 
-  static FileStore? _instance;
-  static FileStore get instance => _instance ??= FileStore._();
+  static final FileStore instance = FileStore._();
 
   String? _baseDir;
 
@@ -21,7 +20,7 @@ class FileStore {
     await Directory(_baseDir!).create(recursive: true);
   }
 
-  /// 为指定 ID 生成输出文件路径（格式：<base>/<yyyyMM>/<id>.avif）
+  /// 为指定 ID 生成输出文件路径（格式：base/yyyyMM/id.avif）
   Future<String> outputPathForId(String id) async {
     final now = DateTime.now();
     final monthDir =
@@ -48,7 +47,7 @@ class FileStore {
     final dir = Directory(_baseDir!);
     if (!dir.existsSync()) return 0;
 
-    int total = 0;
+    var total = 0;
     await for (final entity in dir.list(recursive: true)) {
       if (entity is File) {
         try {

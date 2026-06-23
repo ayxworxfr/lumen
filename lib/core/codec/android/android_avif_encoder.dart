@@ -2,10 +2,11 @@ import 'package:flutter/services.dart';
 
 import '../avif_encoder.dart';
 
-/// Android AVIF 编码器
+/// Android AVIF 编解码器
 ///
 /// 通过 MethodChannel 调用 Kotlin 侧 AvifEncoderChannel：
-/// Kotlin 用 BitmapFactory 解码源图片，经 Bitmap.compress(AVIF) 编码（Android 12+）。
+/// - encode：BitmapFactory 解码源图片 → JNI libheif+libaom 编码为 AVIF
+/// - decode：JNI libheif+dav1d 解码 AVIF → RGBA → Bitmap → JPEG 字节
 class AndroidAvifEncoder extends AvifEncoder {
   const AndroidAvifEncoder();
 
@@ -41,5 +42,15 @@ class AndroidAvifEncoder extends AvifEncoder {
       outputPath: result['outputPath'] as String,
       outputBytes: result['outputBytes'] as int,
     );
+  }
+
+  /// 解码 AVIF 文件，返回 JPEG 字节（可直接 Image.memory() 显示）。
+  /// [maxSide] > 0 时缩小到 maxSide×maxSide 以内，0 表示原始尺寸。
+  static Future<Uint8List?> decode(String avifPath, {int maxSide = 0}) async {
+    final bytes = await _channel.invokeMethod<Uint8List>('decode', {
+      'path': avifPath,
+      'maxSide': maxSide,
+    });
+    return bytes;
   }
 }
