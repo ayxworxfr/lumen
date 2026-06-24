@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 
 import '../../library/services/photo_library_service.dart';
-import '../controllers/compare_controller.dart';
 import '../controllers/history_controller.dart';
 import '../services/compressed_record_repo.dart';
 import '../services/history_service.dart';
@@ -27,12 +26,6 @@ class HistoryBinding extends Bindings {
 
     Get.lazyPut<HistoryController>(
       () => HistoryController(historyService: Get.find<HistoryService>()),
-    );
-    Get.lazyPut<CompareController>(
-      () => CompareController(
-        historyService: Get.find<HistoryService>(),
-        photoLibraryService: Get.find<PhotoLibraryService>(),
-      ),
     );
   }
 }

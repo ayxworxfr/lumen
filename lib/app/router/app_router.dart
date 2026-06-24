@@ -8,14 +8,12 @@ import '../../features/auth/views/login_page.dart';
 import '../../features/auth/views/register_page.dart';
 import '../../features/compress/bindings/compress_binding.dart';
 import '../../features/compress/views/preset_sheet.dart';
-import '../../features/compress/views/progress_page.dart';
 import '../../features/gallery/bindings/gallery_binding.dart';
 import '../../features/gallery/views/album_page.dart';
 import '../../features/gallery/views/edit_page.dart';
 import '../../features/gallery/views/gallery_viewer_page.dart';
 import '../../features/history/bindings/history_binding.dart';
-import '../../features/history/views/compare_page.dart';
-import '../../features/history/views/history_page.dart';
+import '../../features/history/views/compressed_viewer_page.dart';
 import '../../features/home/bindings/home_binding.dart';
 import '../../features/home/views/main_shell.dart';
 import '../../features/home/views/settings_page.dart';
@@ -23,7 +21,7 @@ import '../../features/library/bindings/library_binding.dart';
 import '../../features/library/controllers/library_controller.dart';
 import '../../features/library/models/album_info.dart';
 import '../../features/library/models/photo_asset.dart';
-import '../../features/library/views/library_page.dart';
+import '../../features/library/views/photos_page.dart';
 import '../../features/splash/views/splash_page.dart';
 import '../../shared/constants/storage_keys.dart';
 
@@ -34,15 +32,12 @@ abstract class AppRoutes {
   static const register = '/register';
   static const main = '/main';
   static const mainLibrary = '/main/library';
-  static const mainHistory = '/main/history';
   static const mainSettings = '/main/settings';
   static const compressPreset = '/compress/preset';
-  static const compressProgress = '/compress/progress';
+  static const compressedViewer = '/compressed/viewer';
   static const galleryViewer = '/gallery/viewer';
   static const galleryAlbum = '/gallery/album';
   static const galleryEdit = '/gallery/edit';
-
-  static String historyDetail(String recordId) => '/history/$recordId';
 }
 
 /// 应用路由配置
@@ -87,18 +82,13 @@ class AppRouter {
           HomeBinding().dependencies();
           LibraryBinding().dependencies();
           HistoryBinding().dependencies();
+          CompressBinding().dependencies();
           return NoTransitionPage(child: MainShell(child: child));
         },
         routes: [
           GoRoute(
             path: AppRoutes.mainLibrary,
-            pageBuilder: (_, __) =>
-                const NoTransitionPage(child: LibraryPage()),
-          ),
-          GoRoute(
-            path: AppRoutes.mainHistory,
-            pageBuilder: (_, __) =>
-                const NoTransitionPage(child: HistoryPage()),
+            pageBuilder: (_, __) => const NoTransitionPage(child: PhotosPage()),
           ),
           GoRoute(
             path: AppRoutes.mainSettings,
@@ -119,22 +109,15 @@ class AppRouter {
         },
       ),
       GoRoute(
-        path: AppRoutes.compressProgress,
-        pageBuilder: (_, __) {
-          CompressBinding().dependencies();
-          return const CustomTransitionPage(
-            child: ProgressPage(),
-            transitionsBuilder: _slideFromRight,
-          );
-        },
-      ),
-      GoRoute(
-        path: '/history/:recordId',
+        path: AppRoutes.compressedViewer,
         pageBuilder: (_, state) {
           HistoryBinding().dependencies();
-          final recordId = state.pathParameters['recordId']!;
+          final args = state.extra! as CompressedViewerArgs;
           return CustomTransitionPage(
-            child: ComparePage(recordId: recordId),
+            child: CompressedViewerPage(
+              records: args.records,
+              initialIndex: args.initialIndex,
+            ),
             transitionsBuilder: _slideFromRight,
           );
         },

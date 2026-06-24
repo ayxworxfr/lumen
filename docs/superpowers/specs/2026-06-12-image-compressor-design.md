@@ -92,9 +92,10 @@
 │  Platform Codec  (Dart 接口 + 原生实现)                      │
 │   abstract class AvifEncoder                                │
 │     ├ IosAvifEncoder      → MethodChannel → ImageIO         │
-│     └ AndroidAvifEncoder  → FFI         → libavif (.so)     │
+│     └ AndroidAvifEncoder  → MethodChannel → Kotlin → JNI   │
+│                             → libheif+libaom (.so)          │
 │                                                             │
-│   class ImageDecoder (跨平台，复用系统能力)                  │
+│   class ImageDecoder (格式检测；AVIF 显示见下方说明)         │
 └────────────────────────────────────────────────────────────┘
 ```
 
@@ -135,20 +136,21 @@ lib/
 │   ├── home/                     ← 已存在，扩展为底部 Tab 容器
 │   └── auth/                     ← 已存在
 ├── core/
-│   ├── codec/                    ← 新增：原生编解码层
+│   ├── codec/                    ← 原生编解码层
 │   │   ├── avif_encoder.dart            (abstract)
-│   │   ├── image_decoder.dart
+│   │   ├── image_decoder.dart           (格式检测工具)
 │   │   ├── encoder_factory.dart
 │   │   ├── ios/ios_avif_encoder.dart    (MethodChannel)
-│   │   └── android/android_avif_encoder.dart  (FFI bindings)
-│   ├── isolate/                  ← 新增：编码隔离 worker
+│   │   ├── android/android_avif_encoder.dart  (MethodChannel + decode 静态方法)
+│   │   └── web/web_avif_encoder_stub.dart     (web 存根)
+│   ├── isolate/                  ← 编码隔离 worker
 │   │   └── compress_worker.dart
 │   └── storage/                  ← 已存在，扩展 file_store.dart
 ios/Runner/
 └── codec/AvifEncoderPlugin.swift
 android/app/src/main/
-├── kotlin/.../codec/AvifEncoderChannel.kt   (FFI 加载入口，不参与编码)
-└── jniLibs/<abi>/libavif.so                 (从 libavif release 取或自构)
+├── kotlin/.../codec/AvifEncoderChannel.kt   (编码 + 解码双 MethodChannel handler)
+└── cpp/avif_jni.cpp + CMakeLists.txt        (libheif v1.23.0 + libaom v3.9.1，编译为 lumen_avif.so)
 ```
 
 ---
@@ -189,7 +191,7 @@ class CompressJob {
   DateTime? finishedAt;
 }
 
-@HiveType(typeId: 10)
+@freezed
 class CompressedRecord {
   String id;
   String sourceAssetId;      // 原图引用
@@ -200,6 +202,7 @@ class CompressedRecord {
   DateTime compressedAt;
   bool originalDeleted;      // 用户是否已删除原图（释放空间）
 }
+// 注：不使用 @HiveType；Hive box 存 JSON map（Box<dynamic>），无需类型适配器
 ```
 
 `ImageFormat` 用枚举，后续若加 RAW/GIF 直接扩展。
@@ -228,26 +231,40 @@ Swift: AvifEncoderPlugin
 优点：零 native 依赖、系统优化好、自动选 HW 加速（A14+ 上有部分 HW 加速）。
 风险：iOS 16 早期小版本有个别尺寸编码崩溃的报告；MVP 处理方案是把该 job 标 failed 并在 UI 上提示用户跳过（不退出队列）。打包 libavif XCFramework 作为 fallback 列入后续优化清单，不在 MVP 内。
 
-#### Android：FFI → libavif
+#### Android：MethodChannel → Kotlin → JNI → libheif+libaom
 
-不使用 MethodChannel，直接 FFI 调用打包的 `libavif.so`。原因：
-- 编码是 CPU 密集任务，FFI 跨语言调用比 MethodChannel 序列化便宜很多
-- 可以直接传 `Pointer<Uint8>` 跑在 Dart isolate 里，避免主线程被卡
-- 多个并发 job 之间的内存控制更清晰
+使用与 iOS 对称的 MethodChannel 方案，不使用 Dart FFI。原因：
+- `AvifEncoderChannel.kt` 在后台线程运行，不阻塞主线程
+- 编码前用 `BitmapFactory` 进行源图解码（系统原生支持 JPEG/PNG/WebP/HEIC），省去在 Dart 层做格式解码
+- Native 库通过 CMake + NDK 在构建时编译，无需预置 `.so` 文件
 
-**绑定生成**：用 `ffigen` 从 `avif/avif.h` 自动生成 Dart 绑定。
+**实现层次**：
+```
+Dart AndroidAvifEncoder.encode()
+  → MethodChannel('lumen/avif', method: 'encode')
+  → Kotlin AvifEncoderChannel（后台 Thread）
+    → BitmapFactory.decodeFile → ByteBuffer（RGBA 像素）
+    → JNI encodeToAvif()
+      → libheif：heif_image_create + RGBA plane
+      → libaom：AV1 编码
+      → heif_context_write_to_file
+  ← 返回 {outputPath, outputBytes}
+```
 
-**ABI 支持**：`arm64-v8a`、`armeabi-v7a`、`x86_64`（emulator）。打包来源选 libavif 的 stable release（推荐 1.0+）+ 静态链接 dav1d/aom 的预编译版本，避免运行时找不到符号。
+**ABI 支持**：`arm64-v8a`、`armeabi-v7a`（`x86_64` 暂不支持，模拟器开发需用 arm 模拟器）。
 
-**预估包体增量**：~3-5MB / ABI（仅 encode + dav1d/aom 必要部分；可考虑只内置 aom encoder，舍弃 dav1d 解码）。
+**Native 库**：`lumen_avif.so`，CMake FetchContent 从源码编译 libheif v1.23.0 + libaom v3.9.1。key cmake 配置：`AOM_TARGET_CPU=generic`（Windows 交叉编译不触发 ASM 检测），`WITH_AOM_ENCODER=ON`，`WITH_AOM_DECODER=ON`，其他编解码器全部 OFF。
 
-#### 解码（输入侧）
+#### 解码（输入侧 + AVIF 显示侧）
 
-跨平台用各自系统 API：
-- iOS：`UIImage` / ImageIO 都能解（含 HEIC）
-- Android：`BitmapFactory`（HEIC 需要 API 28+）
+**编码输入**：`BitmapFactory`（Kotlin 层，系统原生支持 JPEG/PNG/WebP/HEIC，API 28+）。
 
-不试图用 Dart 包做解码——`image` 包的 HEIC/WebP 支持参差不齐。
+**AVIF 显示**（Android 特殊处理）：Android API < 31 无原生 AVIF 解码能力，`Image.file(avifPath)` 会静默白屏。实际方案：
+- `AvifEncoderChannel.kt` 同时支持 `decode` MethodChannel 方法
+- JNI `decodeAvif()` 使用 libheif+libaom 解码 → RGBA 像素 → Kotlin 转 Bitmap → JPEG bytes
+- `AndroidAvifEncoder.decode(path, {maxSide})` 静态方法返回 `Future<Uint8List?>`
+- `BeforeAfterSlider` 对 Android 用此方法异步加载压缩后图片；iOS 直接 `pf.buildFileImage()`（系统原生支持 AVIF）
+- 历史页网格不走 AVIF 解码，使用 `AssetEntity.thumbnailDataWithSize()` 取原图的系统缩略图
 
 ### 7.2 系统相册访问
 
@@ -313,10 +330,10 @@ Swift: AvifEncoderPlugin
 
 | 数据 | 存储位置 | 备份 |
 |---|---|---|
-| `CompressedRecord` | Hive box `compressed_records` | iCloud/Auto Backup 排除（避免占云端空间） |
+| `CompressedRecord` | Hive box `'compressed_records'`（key: `StorageKeys.compressedRecordsBox`） | iCloud/Auto Backup 排除（避免占云端空间） |
 | 压缩输出 .avif | `<AppDocs>/compressed/<yyyyMM>/<id>.avif` | 同上排除 |
 | 用户偏好（默认 preset 等） | SharedPrefs（已有体系） | 跟随 |
-| 进行中队列状态 | Hive box `pending_jobs` | 排除 |
+| 进行中队列状态 | Hive box `'pending_jobs'`（key: `StorageKeys.pendingJobsBox`） | 排除 |
 
 **iOS 排除备份**：用 `URLResourceKey.isExcludedFromBackup`。
 **Android**：默认放 internal storage，不参与 Auto Backup。
@@ -419,7 +436,7 @@ Swift: AvifEncoderPlugin
 2. PhotoLibraryService + LibraryPage（系统相册浏览）
 3. CompressService + CompressController + 队列基础设施
 4. PresetSheet + ProgressPage
-5. Android FFI + libavif 接入（最重的一块）
+5. Android MethodChannel + libheif+libaom 接入（最重的一块，含 JNI 编解码）
 6. HistoryPage + CompressedRecord 持久化
 7. ComparePage + 前后对比交互
 8. 错误处理、权限引导、i18n 收口

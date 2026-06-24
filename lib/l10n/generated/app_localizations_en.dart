@@ -476,80 +476,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'AVIF Q92 — best visual quality';
 
   @override
-  String get pagesCompressProgress => 'Compressing';
-
-  @override
-  String get pagesCompressNoJobs => 'No items in queue';
-
-  @override
-  String get pagesCompressDone => 'All done';
-
-  @override
-  String pagesCompressRunning(int done, int total) {
-    return '$done/$total compressed';
-  }
-
-  @override
-  String pagesCompressSaved(String size) {
-    return 'Saved $size total';
-  }
-
-  @override
-  String pagesCompressJobSaved(int pct) {
-    return 'Saved $pct%';
-  }
-
-  @override
-  String get pagesCompressJobFailed => 'Compression failed';
-
-  @override
-  String get pagesCompressJobPending => 'Waiting...';
-
-  @override
-  String get pagesCompressJobRunning => 'Compressing...';
-
-  @override
-  String get pagesCompressJobCanceled => 'Canceled';
-
-  @override
-  String get pagesCompressNoSavings => 'No benefit — file not saved';
-
-  @override
-  String pagesCompressRetryFailed(int n) {
-    return 'Retry ($n failed)';
-  }
-
-  @override
-  String get pagesCompressViewHistory => 'View Results';
-
-  @override
-  String get pagesCompressCancelAll => 'Cancel All';
-
-  @override
-  String get pagesHistoryTitle => 'Compressed';
-
-  @override
-  String pagesHistoryTotalSaved(String size) {
-    return 'Total saved: $size';
-  }
-
-  @override
-  String pagesHistoryCount(int n) {
-    return '$n photos';
-  }
-
-  @override
-  String pagesHistorySaved(String size) {
-    return 'Saved $size';
-  }
-
-  @override
-  String get pagesCompareTitle => 'Before / After';
-
-  @override
-  String get pagesCompareNotFound => 'Record not found';
-
-  @override
   String get pagesCompareOriginal => 'Original';
 
   @override
@@ -577,6 +503,36 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get pagesCompareRollbackConfirm =>
       'This will delete the compressed AVIF file. Your original photo will remain unchanged.';
+
+  @override
+  String get pagesPhotosTitle => 'Photos';
+
+  @override
+  String get pagesPhotosSegmentOriginals => 'Originals';
+
+  @override
+  String get pagesPhotosSegmentCompressed => 'Compressed';
+
+  @override
+  String pagesPhotosProgressRunning(int done, int total) {
+    return 'Compressing $done/$total';
+  }
+
+  @override
+  String pagesPhotosProgressDone(String size) {
+    return 'Done · saved $size';
+  }
+
+  @override
+  String pagesCompressedGalleryStats(int count, String size) {
+    return '$count photos · saved $size';
+  }
+
+  @override
+  String get pagesCompressedGalleryEmpty => 'No compressed photos yet';
+
+  @override
+  String get pagesCompressedViewerLongPress => 'Long press to compare';
 
   @override
   String get pagesLibraryByTime => 'By Time';

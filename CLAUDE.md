@@ -101,7 +101,7 @@ LibraryPage (select photos)
   → CompressService.enqueue(assets, preset)   [permanent GetX service]
   → CompressWorker.encode()                   [lazily creates platform encoder]
   → EncoderFactory.create()                  [iOS: MethodChannel → Swift ImageIO
-                                              Android: MethodChannel → Kotlin → JNI → libavif]
+                                              Android: MethodChannel → Kotlin → JNI → libheif+libaom]
   → FileStore.outputPathForId(jobId)         [<AppDocs>/compressed/<yyyyMM>/<id>.avif]
   → HistoryService.createFromJob(done)       [persists CompressedRecord to Hive]
 ```
@@ -118,12 +118,20 @@ LibraryPage (select photos)
 
 **Cross-restart queue recovery**: on `CompressService.onInit()`, any `running` jobs stored in Hive are reset to `pending` and re-queued.
 
-**Android native build** (`android/app/src/main/cpp/`): The Android encoder uses CMake + NDK to compile `lumen_avif.so`. `CMakeLists.txt` uses `FetchContent` to download libavif v1.1.1 (which internally fetches libaom). Key cmake flags:
-- `AOM_TARGET_CPU="generic"` — prevents libaom from detecting arm64 and looking for `as` assembler (not in PATH on Windows)
-- `AVIF_CODEC_AOM="LOCAL"` — libavif v1.1.1 API for bundling libaom
-- `AVIF_LIBYUV="OFF"` — disables optional libyuv; libavif uses its own YUV routines
+**Android native build** (`android/app/src/main/cpp/`): CMake + NDK compiles `lumen_avif.so` via `FetchContent` pulling libaom v3.9.1 and libheif v1.23.0. Two JNI functions are exposed through `AvifEncoderChannel.kt`:
+- `encodeToAvif` — BitmapFactory decodes source → RGBA pixels → libheif+libaom encodes to AVIF file
+- `decodeAvif` — libheif+libaom decodes AVIF → RGBA pixels → Kotlin wraps as Bitmap → JPEG bytes returned to Dart
 
-**First build**: `make build-android` downloads ~80 MB of C source and compiles for ~30 minutes. Subsequent builds use Gradle's build cache and finish in seconds. If the build fails with cmake errors, run `flutter clean` first to clear the `.cxx` cache.
+Key cmake flags:
+- `AOM_TARGET_CPU="generic"` — prevents libaom from detecting arm64 and looking for `as` assembler (not in PATH on Windows cross-compilation)
+- `WITH_AOM_ENCODER=ON`, `WITH_AOM_DECODER=ON` — both encode and decode use libaom
+- All other libheif codec plugins OFF (`WITH_LIBDE265`, `WITH_X265`, `WITH_DAV1D`, etc.)
+
+`AvifEncoderChannel.kt` dispatches both "encode" and "decode" MethodChannel calls to background threads. The Dart side exposes `AndroidAvifEncoder.decode(path, {maxSide})` as a static method.
+
+**AVIF display on Android**: Android < API 31 has no native AVIF codec, so `Image.file(avifPath)` silently shows white. `BeforeAfterSlider` detects `defaultTargetPlatform == TargetPlatform.android` and calls `AndroidAvifEncoder.decode()` to get JPEG bytes, then displays with `Image.memory()`. iOS natively supports AVIF and uses `pf.buildFileImage()` directly. The history page grid uses `AssetEntity.thumbnailDataWithSize()` (OS thumbnail of the original photo) — no AVIF decode needed there.
+
+**First build**: `make build-android` downloads ~80 MB of C source (libaom + libheif) and compiles for ~30 minutes. Subsequent builds use Gradle's build cache. If the build fails with cmake or Kotlin cache errors, run `flutter clean` first to clear `.cxx` and `build/` caches.
 
 ## Photo Library
 

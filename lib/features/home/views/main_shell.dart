@@ -6,15 +6,14 @@ import '../../../app/router/app_router.dart';
 import '../../../core/l10n/l10n_extension.dart';
 import '../controllers/home_controller.dart';
 
-/// 主 Shell：包含底部 Tab 导航（相册 / 已压缩 / 设置）
+/// 主 Shell：包含底部 Tab 导航（照片 / 设置）
 class MainShell extends GetView<HomeController> {
   const MainShell({required this.child, super.key});
 
   final Widget child;
 
   static int _locationToIndex(String location) {
-    if (location.startsWith(AppRoutes.mainHistory)) return 1;
-    if (location.startsWith(AppRoutes.mainSettings)) return 2;
+    if (location.startsWith(AppRoutes.mainSettings)) return 1;
     return 0;
   }
 
@@ -46,8 +45,6 @@ class MainShell extends GetView<HomeController> {
           case 0:
             context.go(AppRoutes.mainLibrary);
           case 1:
-            context.go(AppRoutes.mainHistory);
-          case 2:
             context.go(AppRoutes.mainSettings);
         }
       },
@@ -56,12 +53,7 @@ class MainShell extends GetView<HomeController> {
         NavigationDestination(
           icon: const Icon(Icons.photo_library_outlined),
           selectedIcon: const Icon(Icons.photo_library),
-          label: l10n.pagesLibraryTitle,
-        ),
-        NavigationDestination(
-          icon: const Icon(Icons.compress_outlined),
-          selectedIcon: const Icon(Icons.compress),
-          label: l10n.pagesHistoryTitle,
+          label: l10n.pagesPhotosTitle,
         ),
         NavigationDestination(
           icon: const Icon(Icons.settings_outlined),

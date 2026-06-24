@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import '../../../app/router/app_router.dart';
 import '../../../core/l10n/l10n_extension.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/widgets/app_loading.dart';
@@ -305,7 +304,6 @@ class _EditPageState extends State<EditPage> {
     final editedAsset = widget.asset.copyWith(path: editedPath);
     final compressService = Get.find<CompressService>();
     compressService.enqueue([editedAsset], CompressPreset.balanced);
-    AppRouter.push(AppRoutes.compressProgress);
   }
 }
 

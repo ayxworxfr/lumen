@@ -49,6 +49,9 @@ class LibraryController extends GetxController {
   final hasMore = true.obs;
   final isLoadingMore = false.obs;
 
+  /// 照片 Tab 段落索引：0 = 原图，1 = 已压缩
+  final photosSegment = 0.obs;
+
   // ─── 派生数据 ─────────────────────────────────────────────
 
   /// 潜在可节省字节数（基于当前已加载图片估算，balanced 预设约 50%）
@@ -212,7 +215,6 @@ class LibraryController extends GetxController {
     final compressService = Get.find<CompressService>();
     compressService.enqueue(selectedAssets, preset);
     exitSelectionMode();
-    AppRouter.go(AppRoutes.compressProgress);
   }
 }
 

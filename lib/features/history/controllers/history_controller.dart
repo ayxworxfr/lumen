@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 
 import '../../../core/utils/logger_util.dart';
+import '../../compress/models/compress_job.dart';
+import '../../compress/services/compress_service.dart';
 import '../models/compressed_record.dart';
 import '../services/history_service.dart';
 
@@ -26,6 +28,17 @@ class HistoryController extends GetxController {
   void onInit() {
     super.onInit();
     loadRecords();
+    _subscribeToCompressEvents();
+  }
+
+  void _subscribeToCompressEvents() {
+    try {
+      Get.find<CompressService>().jobStream.listen((job) {
+        if (job.status == JobStatus.done) loadRecords();
+      });
+    } catch (_) {
+      // CompressService 未注册时（测试环境）静默忽略
+    }
   }
 
   void loadRecords() {

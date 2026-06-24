@@ -13,6 +13,7 @@ import '../../../core/widgets/app_loading.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../compress/models/compress_job.dart';
 import '../../compress/services/compress_service.dart';
+import '../../history/views/compressed_viewer_page.dart';
 import '../../library/models/photo_asset.dart';
 import '../controllers/gallery_viewer_controller.dart';
 
@@ -223,7 +224,10 @@ class _GalleryViewerPageState extends State<GalleryViewerPage> {
   void _openCompare() {
     final record = _ctrl.findRecordForCurrent();
     if (record == null) return;
-    AppRouter.push(AppRoutes.historyDetail(record.id));
+    AppRouter.push(
+      AppRoutes.compressedViewer,
+      extra: CompressedViewerArgs(records: [record], initialIndex: 0),
+    );
   }
 
   void _showCompressSheet(BuildContext context, AppLocalizations l10n) {
@@ -238,7 +242,6 @@ class _GalleryViewerPageState extends State<GalleryViewerPage> {
         onSelected: (preset) {
           final compressService = Get.find<CompressService>();
           compressService.enqueue([_ctrl.currentPhoto], preset);
-          AppRouter.push(AppRoutes.compressProgress);
           _ctrl.refreshCompressedIds();
         },
       ),

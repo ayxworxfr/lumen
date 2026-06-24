@@ -178,64 +178,7 @@
   "pagesCompressPresetBalancedDesc": "AVIF Q85 — recommended balance (default)",
   "pagesCompressPresetHigherQuality": "Higher Quality",
   "pagesCompressPresetHigherQualityDesc": "AVIF Q92 — best visual quality",
-  "pagesCompressProgress": "Compressing",
-  "pagesCompressNoJobs": "No items in queue",
-  "pagesCompressDone": "All done",
-  "pagesCompressRunning": "{done}/{total} compressed",
-  "@pagesCompressRunning": {
-    "placeholders": {
-      "done": { "type": "int" },
-      "total": { "type": "int" }
-    }
-  },
-  "pagesCompressSaved": "Saved {size} total",
-  "@pagesCompressSaved": {
-    "placeholders": {
-      "size": { "type": "String" }
-    }
-  },
-  "pagesCompressJobSaved": "Saved {pct}%",
-  "@pagesCompressJobSaved": {
-    "placeholders": {
-      "pct": { "type": "int" }
-    }
-  },
-  "pagesCompressJobFailed": "Compression failed",
-  "pagesCompressJobPending": "Waiting...",
-  "pagesCompressJobRunning": "Compressing...",
-  "pagesCompressJobCanceled": "Canceled",
-  "pagesCompressNoSavings": "No benefit — file not saved",
-  "pagesCompressRetryFailed": "Retry ({n} failed)",
-  "@pagesCompressRetryFailed": {
-    "placeholders": {
-      "n": { "type": "int" }
-    }
-  },
-  "pagesCompressViewHistory": "View Results",
-  "pagesCompressCancelAll": "Cancel All",
 
-  "pagesHistoryTitle": "Compressed",
-  "pagesHistoryTotalSaved": "Total saved: {size}",
-  "@pagesHistoryTotalSaved": {
-    "placeholders": {
-      "size": { "type": "String" }
-    }
-  },
-  "pagesHistoryCount": "{n} photos",
-  "@pagesHistoryCount": {
-    "placeholders": {
-      "n": { "type": "int" }
-    }
-  },
-  "pagesHistorySaved": "Saved {size}",
-  "@pagesHistorySaved": {
-    "placeholders": {
-      "size": { "type": "String" }
-    }
-  },
-
-  "pagesCompareTitle": "Before / After",
-  "pagesCompareNotFound": "Record not found",
   "pagesCompareOriginal": "Original",
   "pagesCompareCompressed": "AVIF",
   "pagesCompareSaved": "Saved",
@@ -245,6 +188,32 @@
   "pagesCompareRollback": "Roll Back",
   "pagesCompareRollbackTitle": "Remove Compressed File?",
   "pagesCompareRollbackConfirm": "This will delete the compressed AVIF file. Your original photo will remain unchanged.",
+
+  "pagesPhotosTitle": "Photos",
+  "pagesPhotosSegmentOriginals": "Originals",
+  "pagesPhotosSegmentCompressed": "Compressed",
+  "pagesPhotosProgressRunning": "Compressing {done}/{total}",
+  "@pagesPhotosProgressRunning": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "pagesPhotosProgressDone": "Done · saved {size}",
+  "@pagesPhotosProgressDone": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "pagesCompressedGalleryStats": "{count} photos · saved {size}",
+  "@pagesCompressedGalleryStats": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "size": { "type": "String" }
+    }
+  },
+  "pagesCompressedGalleryEmpty": "No compressed photos yet",
+  "pagesCompressedViewerLongPress": "Long press to compare",
 
   "pagesLibraryByTime": "By Time",
   "pagesLibraryByAlbum": "By Album",

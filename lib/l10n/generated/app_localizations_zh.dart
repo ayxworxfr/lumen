@@ -459,80 +459,6 @@ class AppLocalizationsZh extends AppLocalizations {
   String get pagesCompressPresetHigherQualityDesc => 'AVIF Q92 — 最佳视觉质量';
 
   @override
-  String get pagesCompressProgress => '压缩中';
-
-  @override
-  String get pagesCompressNoJobs => '队列为空';
-
-  @override
-  String get pagesCompressDone => '全部完成';
-
-  @override
-  String pagesCompressRunning(int done, int total) {
-    return '已压缩 $done/$total';
-  }
-
-  @override
-  String pagesCompressSaved(String size) {
-    return '共节省 $size';
-  }
-
-  @override
-  String pagesCompressJobSaved(int pct) {
-    return '节省 $pct%';
-  }
-
-  @override
-  String get pagesCompressJobFailed => '压缩失败';
-
-  @override
-  String get pagesCompressJobPending => '等待中...';
-
-  @override
-  String get pagesCompressJobRunning => '压缩中...';
-
-  @override
-  String get pagesCompressJobCanceled => '已取消';
-
-  @override
-  String get pagesCompressNoSavings => '无压缩收益，文件未保存';
-
-  @override
-  String pagesCompressRetryFailed(int n) {
-    return '重试（$n 张失败）';
-  }
-
-  @override
-  String get pagesCompressViewHistory => '查看结果';
-
-  @override
-  String get pagesCompressCancelAll => '取消全部';
-
-  @override
-  String get pagesHistoryTitle => '已压缩';
-
-  @override
-  String pagesHistoryTotalSaved(String size) {
-    return '共节省：$size';
-  }
-
-  @override
-  String pagesHistoryCount(int n) {
-    return '$n 张';
-  }
-
-  @override
-  String pagesHistorySaved(String size) {
-    return '节省 $size';
-  }
-
-  @override
-  String get pagesCompareTitle => '前后对比';
-
-  @override
-  String get pagesCompareNotFound => '记录不存在';
-
-  @override
   String get pagesCompareOriginal => '原图';
 
   @override
@@ -559,6 +485,36 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get pagesCompareRollbackConfirm => '将删除对应的 AVIF 压缩文件，原图不受影响。';
+
+  @override
+  String get pagesPhotosTitle => '照片';
+
+  @override
+  String get pagesPhotosSegmentOriginals => '原图';
+
+  @override
+  String get pagesPhotosSegmentCompressed => '已压缩';
+
+  @override
+  String pagesPhotosProgressRunning(int done, int total) {
+    return '正在压缩 $done/$total';
+  }
+
+  @override
+  String pagesPhotosProgressDone(String size) {
+    return '已完成 · 节省 $size';
+  }
+
+  @override
+  String pagesCompressedGalleryStats(int count, String size) {
+    return '$count 张 · 节省 $size';
+  }
+
+  @override
+  String get pagesCompressedGalleryEmpty => '还没有压缩过的照片';
+
+  @override
+  String get pagesCompressedViewerLongPress => '长按对比原图';
 
   @override
   String get pagesLibraryByTime => '按时间';

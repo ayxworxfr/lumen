@@ -33,8 +33,6 @@ class HomeController extends GetxController {
       case 0:
         AppRouter.go(AppRoutes.mainLibrary);
       case 1:
-        AppRouter.go(AppRoutes.mainHistory);
-      case 2:
         AppRouter.go(AppRoutes.mainSettings);
     }
   }

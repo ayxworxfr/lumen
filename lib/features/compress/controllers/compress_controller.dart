@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 
-import '../../../app/router/app_router.dart';
 import '../../../core/utils/logger_util.dart';
 import '../models/compress_job.dart';
 import '../services/compress_service.dart';
@@ -38,11 +37,6 @@ class CompressController extends GetxController {
   void cancelAll() => _compressService.cancelAll();
 
   void retryFailed() => _compressService.retryFailed();
-
-  /// 全部完成后跳转到历史页
-  void goToHistory() {
-    AppRouter.go(AppRoutes.mainHistory);
-  }
 
   @override
   void onInit() {

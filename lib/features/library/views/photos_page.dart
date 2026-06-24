@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,16 +12,19 @@ import '../../../core/widgets/app_empty.dart';
 import '../../../core/widgets/app_loading.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../compress/models/compress_job.dart';
+import '../../compress/widgets/compress_progress_bar.dart';
+import '../../history/views/compressed_gallery_page.dart';
 import '../controllers/library_controller.dart';
 import '../models/photo_asset.dart';
 import '../widgets/album_grid_widget.dart';
 import '../widgets/photo_grid_cell.dart';
 
-/// 相册浏览页
+/// 照片 Tab 主页
 ///
-/// 顶部 Tab 切换「按时间」（图片网格 + 年月分组）和「按相册」（系统相册列表）。
-class LibraryPage extends GetView<LibraryController> {
-  const LibraryPage({super.key});
+/// 段落 0：原图网格（含按时间/按相册切换、多选压缩）
+/// 段落 1：已压缩 AVIF 画廊
+class PhotosPage extends GetView<LibraryController> {
+  const PhotosPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +32,11 @@ class LibraryPage extends GetView<LibraryController> {
 
     return Scaffold(
       appBar: _buildAppBar(context, l10n),
-      body: Obx(() {
-        if (controller.isLoading.value) return AppLoading.page();
-        if (!controller.hasPermission.value) {
-          return _buildPermissionDenied(context, l10n);
-        }
-        return _buildContent(context, l10n);
-      }),
+      body: Obx(() => _buildBody(context, l10n)),
       bottomNavigationBar: Obx(
-        () => controller.isSelectionMode.value
+        () =>
+            controller.isSelectionMode.value &&
+                controller.photosSegment.value == 0
             ? _buildSelectionBar(context, l10n)
             : const SizedBox.shrink(),
       ),
@@ -48,11 +48,22 @@ class LibraryPage extends GetView<LibraryController> {
     AppLocalizations l10n,
   ) {
     return AppBar(
-      title: Text(l10n.pagesLibraryTitle),
+      title: Obx(() {
+        if (controller.isSelectionMode.value &&
+            controller.photosSegment.value == 0) {
+          return Text(
+            l10n.pagesLibrarySelectedCount(controller.selectedIds.length),
+          );
+        }
+        return Text(l10n.pagesPhotosTitle);
+      }),
       centerTitle: true,
       elevation: 0,
       actions: [
         Obx(() {
+          if (controller.photosSegment.value != 0) {
+            return const SizedBox.shrink();
+          }
           if (controller.isSelectionMode.value) {
             return TextButton(
               onPressed: controller.exitSelectionMode,
@@ -88,9 +99,73 @@ class LibraryPage extends GetView<LibraryController> {
     );
   }
 
-  /// 主内容区：有限访问 banner + Tab 切换 + 视图
-  Widget _buildContent(BuildContext context, AppLocalizations l10n) {
+  Widget _buildBody(BuildContext context, AppLocalizations l10n) {
     return Column(
+      children: [
+        CompressProgressBar(
+          onViewCompressed: () {
+            if (controller.isSelectionMode.value) {
+              controller.exitSelectionMode();
+            }
+            controller.photosSegment.value = 1;
+          },
+        ),
+        _buildSegmentControl(context, l10n),
+        Expanded(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: controller.photosSegment.value == 0
+                ? _buildLibrarySegment(context, l10n)
+                : const CompressedGalleryPage(key: ValueKey('compressed')),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSegmentControl(BuildContext context, AppLocalizations l10n) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: isDark ? AppColors.borderDark : Colors.grey.shade200,
+          ),
+        ),
+      ),
+      child: CupertinoSlidingSegmentedControl<int>(
+        groupValue: controller.photosSegment.value,
+        onValueChanged: (v) {
+          if (v == null) return;
+          controller.photosSegment.value = v;
+          if (controller.isSelectionMode.value) {
+            controller.exitSelectionMode();
+          }
+        },
+        children: {
+          0: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(l10n.pagesPhotosSegmentOriginals),
+          ),
+          1: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(l10n.pagesPhotosSegmentCompressed),
+          ),
+        },
+      ),
+    );
+  }
+
+  Widget _buildLibrarySegment(BuildContext context, AppLocalizations l10n) {
+    if (controller.isLoading.value) {
+      return AppLoading.page();
+    }
+    if (!controller.hasPermission.value) {
+      return _buildPermissionDenied(context, l10n);
+    }
+    return Column(
+      key: const ValueKey('library'),
       children: [
         if (controller.isLimitedAccess.value)
           _buildLimitedAccessBanner(context, l10n),
@@ -247,7 +322,7 @@ class LibraryPage extends GetView<LibraryController> {
   }
 }
 
-// ─── Tab 指示器 ────────────────────────────────────────────────
+// ─── Tab 指示器 ────────────────────────────────────────────────────
 
 class _TabItem extends StatelessWidget {
   const _TabItem({
@@ -287,7 +362,7 @@ class _TabItem extends StatelessWidget {
   }
 }
 
-// ─── 按时间视图 ──────────────────────────────────────────────
+// ─── 按时间视图 ────────────────────────────────────────────────────
 
 class _ByTimeView extends GetView<LibraryController> {
   const _ByTimeView({super.key});
@@ -418,7 +493,7 @@ class _ByTimeView extends GetView<LibraryController> {
   }
 }
 
-// ─── 按相册视图 ──────────────────────────────────────────────
+// ─── 按相册视图 ────────────────────────────────────────────────────
 
 class _ByAlbumView extends GetView<LibraryController> {
   const _ByAlbumView({super.key});
@@ -438,7 +513,7 @@ class _ByAlbumView extends GetView<LibraryController> {
   }
 }
 
-// ─── 压缩预设选择底部弹层 ────────────────────────────────────
+// ─── 压缩预设选择底部弹层 ──────────────────────────────────────────
 
 class _PresetPickerSheet extends StatelessWidget {
   const _PresetPickerSheet({required this.onSelected, required this.l10n});

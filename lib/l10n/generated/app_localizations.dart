@@ -986,126 +986,6 @@ abstract class AppLocalizations {
   /// **'AVIF Q92 — best visual quality'**
   String get pagesCompressPresetHigherQualityDesc;
 
-  /// No description provided for @pagesCompressProgress.
-  ///
-  /// In en, this message translates to:
-  /// **'Compressing'**
-  String get pagesCompressProgress;
-
-  /// No description provided for @pagesCompressNoJobs.
-  ///
-  /// In en, this message translates to:
-  /// **'No items in queue'**
-  String get pagesCompressNoJobs;
-
-  /// No description provided for @pagesCompressDone.
-  ///
-  /// In en, this message translates to:
-  /// **'All done'**
-  String get pagesCompressDone;
-
-  /// No description provided for @pagesCompressRunning.
-  ///
-  /// In en, this message translates to:
-  /// **'{done}/{total} compressed'**
-  String pagesCompressRunning(int done, int total);
-
-  /// No description provided for @pagesCompressSaved.
-  ///
-  /// In en, this message translates to:
-  /// **'Saved {size} total'**
-  String pagesCompressSaved(String size);
-
-  /// No description provided for @pagesCompressJobSaved.
-  ///
-  /// In en, this message translates to:
-  /// **'Saved {pct}%'**
-  String pagesCompressJobSaved(int pct);
-
-  /// No description provided for @pagesCompressJobFailed.
-  ///
-  /// In en, this message translates to:
-  /// **'Compression failed'**
-  String get pagesCompressJobFailed;
-
-  /// No description provided for @pagesCompressJobPending.
-  ///
-  /// In en, this message translates to:
-  /// **'Waiting...'**
-  String get pagesCompressJobPending;
-
-  /// No description provided for @pagesCompressJobRunning.
-  ///
-  /// In en, this message translates to:
-  /// **'Compressing...'**
-  String get pagesCompressJobRunning;
-
-  /// No description provided for @pagesCompressJobCanceled.
-  ///
-  /// In en, this message translates to:
-  /// **'Canceled'**
-  String get pagesCompressJobCanceled;
-
-  /// No description provided for @pagesCompressNoSavings.
-  ///
-  /// In en, this message translates to:
-  /// **'No benefit — file not saved'**
-  String get pagesCompressNoSavings;
-
-  /// No description provided for @pagesCompressRetryFailed.
-  ///
-  /// In en, this message translates to:
-  /// **'Retry ({n} failed)'**
-  String pagesCompressRetryFailed(int n);
-
-  /// No description provided for @pagesCompressViewHistory.
-  ///
-  /// In en, this message translates to:
-  /// **'View Results'**
-  String get pagesCompressViewHistory;
-
-  /// No description provided for @pagesCompressCancelAll.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel All'**
-  String get pagesCompressCancelAll;
-
-  /// No description provided for @pagesHistoryTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Compressed'**
-  String get pagesHistoryTitle;
-
-  /// No description provided for @pagesHistoryTotalSaved.
-  ///
-  /// In en, this message translates to:
-  /// **'Total saved: {size}'**
-  String pagesHistoryTotalSaved(String size);
-
-  /// No description provided for @pagesHistoryCount.
-  ///
-  /// In en, this message translates to:
-  /// **'{n} photos'**
-  String pagesHistoryCount(int n);
-
-  /// No description provided for @pagesHistorySaved.
-  ///
-  /// In en, this message translates to:
-  /// **'Saved {size}'**
-  String pagesHistorySaved(String size);
-
-  /// No description provided for @pagesCompareTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Before / After'**
-  String get pagesCompareTitle;
-
-  /// No description provided for @pagesCompareNotFound.
-  ///
-  /// In en, this message translates to:
-  /// **'Record not found'**
-  String get pagesCompareNotFound;
-
   /// No description provided for @pagesCompareOriginal.
   ///
   /// In en, this message translates to:
@@ -1159,6 +1039,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This will delete the compressed AVIF file. Your original photo will remain unchanged.'**
   String get pagesCompareRollbackConfirm;
+
+  /// No description provided for @pagesPhotosTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos'**
+  String get pagesPhotosTitle;
+
+  /// No description provided for @pagesPhotosSegmentOriginals.
+  ///
+  /// In en, this message translates to:
+  /// **'Originals'**
+  String get pagesPhotosSegmentOriginals;
+
+  /// No description provided for @pagesPhotosSegmentCompressed.
+  ///
+  /// In en, this message translates to:
+  /// **'Compressed'**
+  String get pagesPhotosSegmentCompressed;
+
+  /// No description provided for @pagesPhotosProgressRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Compressing {done}/{total}'**
+  String pagesPhotosProgressRunning(int done, int total);
+
+  /// No description provided for @pagesPhotosProgressDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done · saved {size}'**
+  String pagesPhotosProgressDone(String size);
+
+  /// No description provided for @pagesCompressedGalleryStats.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} photos · saved {size}'**
+  String pagesCompressedGalleryStats(int count, String size);
+
+  /// No description provided for @pagesCompressedGalleryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No compressed photos yet'**
+  String get pagesCompressedGalleryEmpty;
+
+  /// No description provided for @pagesCompressedViewerLongPress.
+  ///
+  /// In en, this message translates to:
+  /// **'Long press to compare'**
+  String get pagesCompressedViewerLongPress;
 
   /// No description provided for @pagesLibraryByTime.
   ///

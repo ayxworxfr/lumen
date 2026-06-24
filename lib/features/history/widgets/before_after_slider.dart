@@ -45,8 +45,9 @@ class _BeforeAfterSliderState extends State<BeforeAfterSlider> {
 
   Future<Uint8List?> _loadCompressed() {
     // Android 不支持原生 AVIF 解码（API < 31），通过 JNI dav1d 解码后转 JPEG
-    if (defaultTargetPlatform != TargetPlatform.android)
+    if (defaultTargetPlatform != TargetPlatform.android) {
       return Future<Uint8List?>.value();
+    }
     return AndroidAvifEncoder.decode(widget.compressedPath, maxSide: 2048);
   }
 
